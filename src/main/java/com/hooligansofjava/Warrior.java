@@ -14,13 +14,11 @@ public class Warrior extends Character implements Attacker{
     }
 
     private static int randomNumber(int x, int x1) {
-        int number = (int)(Math.random()* x + x1);
-        return number;
+        return  (int)(Math.random()* x + x1);
     }
 
     private static String randomName() {
-        String name = nameWarriorsArray[(int) Math.random()*nameWarriorsArray.length];
-        return name;
+        return nameWarriorsArray[(int) Math.random()*nameWarriorsArray.length];
     }
 
 
