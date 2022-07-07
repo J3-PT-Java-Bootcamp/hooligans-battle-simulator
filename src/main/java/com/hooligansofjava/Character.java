@@ -1,5 +1,9 @@
 package com.hooligansofjava;
 
+import net.datafaker.Faker;
+
+import java.util.Random;
+
 public abstract class Character {
     protected int id;
     protected String name;
@@ -59,4 +63,7 @@ public abstract class Character {
         }
         return getHp();
     }
+
+
+
 }
