@@ -2,7 +2,6 @@ package com.hooligansofjava;
 
 import net.datafaker.Faker;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -10,110 +9,46 @@ import java.util.Scanner;
 public class Game {
     static ArrayList<Character> partyPlayer1 = new ArrayList<>();
     static ArrayList<Character> partyPlayer2 = new ArrayList<>();
+
     public static void main(String[] args) {
-        System.out.println("Wellcome to the game of Holligans of JAVA: ");
+        System.out.println("Welcome to the game of Hooligans of JAVA: ");
         Faker faker = new Faker();
         Scanner sc = new Scanner(System.in);
-        Character character = null;
-        String player = "";
-        while (!checkValidPlayer(player)) {
-            System.out.println("""
-                    Select a player to start the set up:
-                    ______________
-                    1 --> Player 1
-                    2 --> Player 2
-                    ______________
-                    """);
-            player = sc.nextLine();
-        }
-        System.out.println("Hello Player " + player);
-        System.out.println("Now, you have to select the number of warriors and wizards.");
-        String warriors = "-1";
-        while (!checkValidNumber(warriors)) {
-            System.out.println("Number of warriors: ");
-            warriors = sc.nextLine();
-            System.out.println(warriors);
-        }
-        int numberOfWarriors = Integer.parseInt(warriors);
-        while (numberOfWarriors > 0) {
-            createCustomizedCharacter(sc, TypeOfCharacter.WARRIOR);
-            // preguntar si vol custom warrior
-            // si custom warrior -> ask for warrior details
-            // generate warrior with asked details
-            // add warrior to player's party
-            // decrease numberOfWarrior
-            // start while again
-            // else create Random warrior
-            // add warrior to player's party
-            // decrease numberOfWarrior
-            // start while again
-        }
-        System.out.println("Now let's set up the wizards");
-
-        String wizards = "-1";
-        while (!checkValidNumber(wizards)) {
-            System.out.println("Number of wizards: ");
-            wizards = sc.nextLine();
-            System.out.println(wizards);
-        }
-        var mainMenu = """
-                Do you want customize them?
-                ===============
-                1. YES 
-                2. NO 
-                3. EXIT - close the application
-                ===============
-                """;
-
-        System.out.println(mainMenu);
-        String selection = "-1";
-
-        while (!checkValidNumber(selection)) {
-            System.out.println("Choose your option: ");
-            selection = sc.nextLine();
-        }
-        switch (selection) {
-            case "1":
-                character = askCharacterInfo(sc);
-                break;
-            case "2":
-                String typeOfCharacter = null;
-                while (!checkValidNumber(typeOfCharacter)) {
-                    System.out.println("""
-                What type of character do you want to customize?
-                ===============
-                1. WARRIOR
-                2. WIZARD
-                3. EXIT - Close the application
-                ===============
-                """);
-                    typeOfCharacter = sc.nextLine();
-                }
-                character = createRandomCharacter(typeOfCharacter, faker);
-                break;
-            case "3": //exit game
-                break;
-            default:
-                System.out.println("Not valid number.");
+        int players = 0;
+        while (players != 2) {
+            int player = ConsoleQuery.queryToConsole(sc, "Select a player to start the set up:", new String[]{"Player 1", "Player 2"}, 1, 2);
+            players++;
+            System.out.println("Hello Player " + player);
+            System.out.println("Now, you have to select the number of warriors and wizards.");
+            int warriorCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of warriors .", 1, 10);
+            generateCharacterLoop(faker, sc, TypeOfCharacter.WARRIOR, player, warriorCount);
+            int wizardCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of wizards.", 1, 10);
+            generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount);
         }
 
-        if (character != null) {
-            if (player.equals("1")) {
-                partyPlayer1.add(character);
+
+    }
+
+    private static void generateCharacterLoop(Faker faker, Scanner sc, TypeOfCharacter type, int player, int count) {
+        for (int i = 0; i < count; i++) {
+            Character newCharacter;
+            boolean customCharacter = ConsoleQuery.queryToConsole(sc, "Do you want to create a customized character? (Y/N)");
+            if (customCharacter) {
+                newCharacter = createCustomizedCharacter(sc, type);
             } else {
-                partyPlayer2.add(character);
+                newCharacter = createRandomCharacter(type, faker);
+            }
+            if (player == 1) {
+                partyPlayer1.add(newCharacter);
+            } else {
+                partyPlayer2.add(newCharacter);
             }
         }
     }
 
-    public static boolean checkValidPlayer(String player1) {
-
-        return player1.equals("1") || player1.equals("2");
-    }
-
     public static boolean checkValidNumber(String characterNumber) {
-        int number = 0;
-        if(characterNumber == null) {
+        int number ;
+        if (characterNumber == null) {
             return false;
         }
         try {
@@ -130,11 +65,11 @@ public class Game {
         return random.nextInt() % (max - min + 1);
     }
 
-    private static Character createRandomCharacter(String type, Faker faker) {
+    private static Character createRandomCharacter(TypeOfCharacter type, Faker faker) {
         return CharacterFactory.getCharacter(type, generateRandomNumber(1, 50), faker.name().fullName(), generateRandomNumber(50, 100), generateRandomNumber(10, 100), generateRandomNumber(10, 100));
     }
 
-    private static Character createCharacter(String type, String name, int hp, int classFirstAttribute, int classSecondAttribute) {
+    private static Character createCharacter(TypeOfCharacter type, String name, int hp, int classFirstAttribute, int classSecondAttribute) {
         // classFirstAttribute and classSecondAttribute corresponds to stamina and strength for Warrior and mana and intelligence for Wizard
         return CharacterFactory.getCharacter(type, generateRandomNumber(1, 50), name, hp, classFirstAttribute, classSecondAttribute);
     }
@@ -142,43 +77,23 @@ public class Game {
     private static Character createCustomizedCharacter(Scanner sc, TypeOfCharacter type) {
         // Character attributes to set
         String name;
-        String health = null;
-        String firstAttribute = null;
-        String secondAttribuite = null;
+        int health;
+        Integer firstAttribute = null;
+        Integer secondAttribute = null;
 
         switch (type) {
-            case TypeOfCharacter.WARRIOR:
-                while (!checkValidNumber(firstAttribute)) {
-                    System.out.println("Define how much stamina do you want to set - (Choose a number bewteen 10 - 50)");
-                    firstAttribute = sc.nextLine();
-                }
-                while (!checkValidNumber(secondAttribuite)) {
-                    System.out.println("Define how much strength do you want to set - (Choose a number bewteen 1 - 10)");
-                    secondAttribuite = sc.nextLine();
-                }
-                break;
-            case TypeOfCharacter.WIZARD:
-                while(!checkValidNumber(firstAttribute)) {
-                    System.out.println("Define how much mana do you want to set - (Choose a number between 10 - 50)");
-                    firstAttribute = sc.nextLine();
-                }
-                while(!checkValidNumber(secondAttribuite)) {
-                    System.out.println("Define how much intelligence do you want to set - (Choose a number between 1 - 50");
-                    secondAttribuite = sc.nextLine();
-                }
-                break;
-            case "3": //exit game
-                break;
-            default:
-                System.out.println("Not valid number.");
+            case WARRIOR -> {
+                firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much stamina do you want to set - (Choose a number between 10 - 50)", 10, 50);
+                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much strength do you want to set - (Choose a number between 10 - 50)", 10, 10);
+            }
+            case WIZARD -> {
+                firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much mana do you want to set - (Choose a number between 10 - 50)", 10, 50);
+                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much intelligence do you want to set - (Choose a number between 10 - 50)", 1, 50);
+            }
         }
-        while(!checkValidNumber(health)) {
-            System.out.println("Define how much health do you want to set - (Choose a number between 1 - 100)");
-            health = sc.nextLine();
-        }
+        health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between 1 - 100)", 1, 100);
+        name = ConsoleQuery.queryToConsoleText(sc, "Finally, set a funny name for you Hero!" );
         System.out.println("Finally, set a funny name for you Hero!");
-        name = sc.nextLine();
-
-        return createCharacter(typeOfCharacter, name, Integer.parseInt(health), Integer.parseInt(firstAttribute), Integer.parseInt(secondAttribuite));
+        return createCharacter(type, name, health, firstAttribute, secondAttribute);
     }
 }
