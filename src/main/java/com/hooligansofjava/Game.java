@@ -14,13 +14,22 @@ public class Game {
         System.out.println("Welcome to the game of Hooligans of JAVA: ");
         Faker faker = new Faker();
         Scanner sc = new Scanner(System.in);
+        int playerId= 0;
         int players = 0;
         while (players != 2) {
-            int player = ConsoleQuery.queryToConsole(sc, "Select a player to start the set up:", new String[]{"Player 1", "Player 2"}, 1, 2);
+            int player = 0;
+            if(playerId==0){
+                player = ConsoleQuery.queryToConsole(sc, "Select a player to start the set up:", new String[]{"Player 1", "Player 2"}, 1, 2);
+            }else if(playerId==1){
+                player = 2;
+            }else if (playerId==2){
+                player = 1;
+            }
             players++;
+            playerId = player;
             System.out.println("Hello Player " + player);
             System.out.println("Now, you have to select the number of warriors and wizards.");
-            int warriorCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of warriors .", 1, 10);
+            int warriorCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of warriors.", 1, 10);
             generateCharacterLoop(faker, sc, TypeOfCharacter.WARRIOR, player, warriorCount);
             int wizardCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of wizards.", 1, 10);
             generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount);
@@ -84,7 +93,7 @@ public class Game {
         switch (type) {
             case WARRIOR -> {
                 firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much stamina do you want to set - (Choose a number between 10 - 50)", 10, 50);
-                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much strength do you want to set - (Choose a number between 10 - 50)", 10, 10);
+                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much strength do you want to set - (Choose a number between 10 - 50)", 10, 50);
             }
             case WIZARD -> {
                 firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much mana do you want to set - (Choose a number between 10 - 50)", 10, 50);
