@@ -47,6 +47,7 @@ public class Game {
             } else {
                 newCharacter = createRandomCharacter(type, faker);
             }
+            System.out.println(newCharacter);
             if (player == 1) {
                 partyPlayer1.add(newCharacter);
             } else {
@@ -84,7 +85,6 @@ public class Game {
     }
 
     private static Character createCustomizedCharacter(Scanner sc, TypeOfCharacter type) {
-        // Character attributes to set
         String name;
         int health;
         Integer firstAttribute = null;
@@ -92,12 +92,12 @@ public class Game {
 
         switch (type) {
             case WARRIOR -> {
-                firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much stamina do you want to set - (Choose a number between 10 - 50)", 10, 50);
-                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much strength do you want to set - (Choose a number between 10 - 50)", 10, 50);
+                firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much stamina do you want to set - (Choose a number between 10 - 50)", TypeOfCharacter.WARRIOR.firstParamMin, TypeOfCharacter.WARRIOR.firstParamMax);
+                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much strength do you want to set - (Choose a number between 10 - 50)", TypeOfCharacter.WARRIOR.secondParamMin, TypeOfCharacter.WARRIOR.secondParamMax);
             }
             case WIZARD -> {
-                firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much mana do you want to set - (Choose a number between 10 - 50)", 10, 50);
-                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much intelligence do you want to set - (Choose a number between 10 - 50)", 1, 50);
+                firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much mana do you want to set - (Choose a number between 10 - 50)", TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.secondParamMax);
+                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much intelligence do you want to set - (Choose a number between 10 - 50)", TypeOfCharacter.WIZARD.secondParamMin, TypeOfCharacter.WIZARD.secondParamMax);
             }
         }
         health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between 1 - 100)", 1, 100);

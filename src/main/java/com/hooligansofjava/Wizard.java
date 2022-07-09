@@ -1,26 +1,26 @@
 package com.hooligansofjava;
 
-public class Wizard extends Character implements Attacker{
+public class Wizard extends Character implements Attacker {
 
     private int mana;
     private int intelligence;
 
-    private static String [] nameWizardsArray = {"Urhan","Ejamar","Ataz","Ugovras"};
+    final static String[] nameWizardsArray = {"Urhan", "Ejamar", "Ataz", "Ugovras"};
 
-    public Wizard(){
-        super( randomNumber(1000,1), randomName(),randomNumber(100,100));
-        setIntelligence(randomNumber(49,1));
-        setMana(randomNumber(40,10));
+    public Wizard() {
+        super(randomNumber(1000, 1), randomName(), randomNumber(100, 100));
+        setIntelligence(randomNumber(49, 1));
+        setMana(randomNumber(40, 10));
     }
 
     private static int randomNumber(int x, int x1) {
-        int number = (int)(Math.random()* x + x1);
-        return number;
+      return (int) (Math.random() * x + x1);
+
     }
 
     private static String randomName() {
-        String name = nameWizardsArray[(int) Math.random()* nameWizardsArray.length];
-        return name;
+        return nameWizardsArray[(int) (Math.random() * nameWizardsArray.length)];
+
     }
 
 
@@ -49,26 +49,18 @@ public class Wizard extends Character implements Attacker{
 
     @Override
     public String toString() {
-        return "Wizard{" +
-                "mana=" + mana +
-                ", intelligence=" + intelligence +
-                ", id=" + id +
-                ", name='" + name + '\'' +
-                ", hp=" + hp +
-                ", isAlive=" + isAlive +
-                "} " + super.toString();
+        return "Wizard{" + "mana=" + mana + ", intelligence=" + intelligence + ", id=" + id + ", name='" + name + '\'' + ", hp=" + hp + ", isAlive=" + isAlive + "} " + super.toString();
     }
 
     @Override
     public int attack() {
-        if(mana>=5) {
+        if (mana >= 5) {
             mana -= 5;
             return intelligence;
         }
-        mana ++;
+        mana++;
         return 2;
     }
-
 
 
 }
