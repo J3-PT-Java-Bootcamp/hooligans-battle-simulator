@@ -1,28 +1,46 @@
 package com.hooligansofjava;
 
+import com.google.gson.Gson;
 import net.datafaker.Faker;
 
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.SortedMap;
 
 public class Game {
     static ArrayList<Character> partyPlayer1 = new ArrayList<>();
     static ArrayList<Character> partyPlayer2 = new ArrayList<>();
 
-    public static void main(String[] args) {
+    public Game(ArrayList<Character> partyPlayer1, ArrayList<Character> partyPlayer2) {
+        Game.partyPlayer1 = partyPlayer1;
+        Game.partyPlayer2 = partyPlayer2;
+
+    }
+
+    public static String generateJson() {
+        Gson gson = new Gson();
+        return"{\"game\":{player1:[" + gson.toJson(partyPlayer1) + "},".concat("{\"player2\":" + gson.toJson(partyPlayer2) + "}]}");
+
+    }
+
+    public static void parseJson() {
+
+    }
+
+    public static void startConsole() {
         System.out.println("Welcome to the game of Hooligans of JAVA: ");
         Faker faker = new Faker();
         Scanner sc = new Scanner(System.in);
-        int playerId= 0;
+        int playerId = 0;
         int players = 0;
         while (players != 2) {
             int player = 0;
-            if(playerId==0){
+            if (playerId == 0) {
                 player = ConsoleQuery.queryToConsole(sc, "Select a player to start the set up:", new String[]{"Player 1", "Player 2"}, 1, 2);
-            }else if(playerId==1){
+            } else if (playerId == 1) {
                 player = 2;
-            }else if (playerId==2){
+            } else if (playerId == 2) {
                 player = 1;
             }
             players++;
@@ -34,7 +52,15 @@ public class Game {
             int wizardCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of wizards.", 1, 10);
             generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount);
         }
+        System.out.println("end reading data from terminal");
+        for (int i = 0; i < partyPlayer1.size(); i++) {
+            System.out.println(partyPlayer1.get(i));
 
+        }
+        for (int i = 0; i < partyPlayer2.size(); i++) {
+            System.out.println(partyPlayer2.get(i));
+
+        }
 
     }
 
@@ -57,7 +83,7 @@ public class Game {
     }
 
     public static boolean checkValidNumber(String characterNumber) {
-        int number ;
+        int number;
         if (characterNumber == null) {
             return false;
         }
@@ -101,7 +127,7 @@ public class Game {
             }
         }
         health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between 1 - 100)", 1, 100);
-        name = ConsoleQuery.queryToConsoleText(sc, "Finally, set a funny name for you Hero!" );
+        name = ConsoleQuery.queryToConsoleText(sc, "Finally, set a funny name for you Hero!");
         System.out.println("Finally, set a funny name for you Hero!");
         return createCharacter(type, name, health, firstAttribute, secondAttribute);
     }

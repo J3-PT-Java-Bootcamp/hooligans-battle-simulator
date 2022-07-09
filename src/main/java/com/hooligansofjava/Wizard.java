@@ -8,7 +8,7 @@ public class Wizard extends Character implements Attacker {
     final static String[] nameWizardsArray = {"Urhan", "Ejamar", "Ataz", "Ugovras"};
 
     public Wizard() {
-        super(randomNumber(1000, 1), randomName(), randomNumber(100, 100));
+        super( randomName(), randomNumber(100, 100));
         setIntelligence(randomNumber(49, 1));
         setMana(randomNumber(40, 10));
     }
@@ -24,8 +24,8 @@ public class Wizard extends Character implements Attacker {
     }
 
 
-    public Wizard(int id, String name, int hp, int mana, int intelligence) {
-        super(id, name, hp);
+    public Wizard( String name, int hp, int mana, int intelligence) {
+        super( name, hp);
         setMana(mana);
         setIntelligence(intelligence);
     }
