@@ -1,39 +1,61 @@
 package com.hooligansofjava;
-
 import com.google.gson.Gson;
 import net.datafaker.Faker;
-
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
-    static ArrayList<Character> partyPlayer1 = new ArrayList<>();
-    static ArrayList<Character> partyPlayer2 = new ArrayList<>();
+    final ArrayList<Character> partyPlayer1 = new ArrayList<>();
+    final ArrayList<Character> partyPlayer2 = new ArrayList<>();
 
-    public Game(ArrayList<Character> partyPlayer1, ArrayList<Character> partyPlayer2) {
-        Game.partyPlayer1 = partyPlayer1;
-        Game.partyPlayer2 = partyPlayer2;
-
-    }
 
     public Game() {
 
     }
 
-    public static String generateJson() {
+    public String generateJson() {
         Gson gson = new Gson();
-        return "{\"game\":[{\"player1\":" + gson.toJson(partyPlayer1) + "},".concat("{\"player2\":" + gson.toJson(partyPlayer2) + "}]}");
+        ArrayList<Wizard> player1Wizards;
+        player1Wizards = partyPlayer1.stream().filter(x -> x instanceof Wizard).map(x -> (Wizard) x).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        ArrayList<Warrior> player1Warriors;
+        player1Warriors = partyPlayer1.stream().filter(x -> x instanceof Warrior).map(x -> (Warrior) x).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        ArrayList<Wizard> player2Wizards;
+        player2Wizards = partyPlayer2.stream().filter(x -> x instanceof Wizard).map(x -> (Wizard) x).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        ArrayList<Warrior> player2Warriors;
+        player2Warriors = partyPlayer2.stream().filter(x -> x instanceof Warrior).map(x -> (Warrior) x).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        return "%s Warriors::%s player2::%sWarriors::%s".formatted(gson.toJson(player1Wizards), gson.toJson(player1Warriors), gson.toJson(player2Wizards), gson.toJson(player2Warriors));
 
     }
 
-    public static void parseJson(String JSONText) {
+    public void parseJson(String JSONText) {
+        Gson gson = new Gson();
+        String[] player = JSONText.split("player2::");
+        String player1 = player[0];
+        String player2 = player[1];
+
+        String player1Wizards = player1.split("Warriors::")[0];
+        String player1Warriors = player1.split("Warriors::")[1];
+        String player2Wizards = player2.split("Warriors::")[0];
+        String player2Warriors = player2.split("Warriors::")[1];
+
+        Warrior[] loadedWarriors = gson.fromJson(player1Wizards, Warrior[].class);
+        Wizard[] loadedWizards = gson.fromJson(player1Warriors, Wizard[].class);
+        Warrior[] loadedWarriors2 = gson.fromJson(player2Warriors, Warrior[].class);
+        Wizard[] loadedWizards2 = gson.fromJson(player2Wizards, Wizard[].class);
+
+        partyPlayer1.addAll(Arrays.asList(loadedWarriors));
+        partyPlayer1.addAll(Arrays.asList(loadedWizards));
+        partyPlayer2.addAll(Arrays.asList(loadedWarriors2));
+        partyPlayer2.addAll(Arrays.asList(loadedWizards2));
+        System.out.println("player1" + partyPlayer1.get(1));
 
 
     }
 
-    public Game startConsole(){
+    public Game startConsole() {
         System.out.println("Welcome to the game of Hooligans of JAVA: ");
         Faker faker = new Faker();
         Scanner sc = new Scanner(System.in);
@@ -42,9 +64,10 @@ public class Game {
         boolean readPreviousParty = ConsoleQuery.queryToConsole(sc, "Read previous party?");
         if (readPreviousParty) {
             try {
-            parseJson(FileReadAndWrite.readFile());
-            players = 2;
-            }catch (IOException e){
+                System.out.println("reading file");
+                parseJson(FileReadAndWrite.readFile());
+                players = 2;
+            } catch (IOException e) {
                 System.out.println("error reading file, Initiating normal game...");
             }
         }
@@ -67,19 +90,11 @@ public class Game {
             generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount);
         }
         System.out.println("end reading data from terminal");
-        for (Character character : partyPlayer1) {
-            System.out.println(character);
-
-        }
-        for (Character character : partyPlayer2) {
-            System.out.println(character);
-
-        }
 
         return null;
     }
 
-    private static void generateCharacterLoop(Faker faker, Scanner sc, TypeOfCharacter type, int player, int count) {
+    private void generateCharacterLoop(Faker faker, Scanner sc, TypeOfCharacter type, int player, int count) {
         for (int i = 0; i < count; i++) {
             Character newCharacter;
             boolean customCharacter = ConsoleQuery.queryToConsole(sc, "Do you want to create a customized character? (Y/N)");
@@ -90,9 +105,9 @@ public class Game {
             }
             System.out.println(newCharacter);
             if (player == 1) {
-                partyPlayer1.add(newCharacter);
+                this.partyPlayer1.add(newCharacter);
             } else {
-                partyPlayer2.add(newCharacter);
+                this.partyPlayer2.add(newCharacter);
             }
         }
     }
@@ -113,7 +128,7 @@ public class Game {
 
     private static int generateRandomNumber(int min, int max) {
         Random random = new Random();
-        return random.nextInt() % (max - min + 1);
+        return random.nextInt() * (max - min + 1);
     }
 
     private static Character createRandomCharacter(TypeOfCharacter type, Faker faker) {

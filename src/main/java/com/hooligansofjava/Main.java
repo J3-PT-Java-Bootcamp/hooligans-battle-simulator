@@ -7,10 +7,8 @@ public class Main {
 
         Game newGame = new Game();
         newGame.startConsole();
-        System.out.println(Game.generateJson());
+        System.out.println(newGame.generateJson());
         FileReadAndWrite.writeFile(newGame);
-
-
 
     }
 

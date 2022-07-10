@@ -25,7 +25,6 @@ public abstract class Character {
     }
     public void setId( ) {
         UUID uuid = UUID.randomUUID();
-
         this.id = uuid.toString();
     }
     public String getName() {
