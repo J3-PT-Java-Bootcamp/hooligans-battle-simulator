@@ -169,14 +169,20 @@ public class Game {
         while (getAliveCharacters(partyPlayer1).size() > 0 && getAliveCharacters(partyPlayer2).size() > 0) {
             Character player1 = getAliveCharacters(partyPlayer1).get(0);
             Character player2 = getAliveCharacters(partyPlayer2).get(0);
-            System.out.println("player1 " + player1.name + " Attacks --> player2 " + player2.name);
+            System.out.println("player1 " + player1.name + " (" + player1.getHp() + " ) Attacks " + "--> player2 " + player2.name + " (" + player2.getHp() + ")");
             System.out.println("player2 " + player2.name + " Attacks --> player1 " + player1.name);
 
-            if (player1 instanceof Warrior){
+            if (player1 instanceof Warrior) {
                 player2.receiveAttack(((Warrior) player1).attack());
             }
-            if (player1 instanceof Wizard){
+            if (player1 instanceof Wizard) {
                 player2.receiveAttack(((Wizard) player1).attack());
+            }
+            if (player2 instanceof Warrior) {
+                player1.receiveAttack(((Warrior) player2).attack());
+            }
+            if (player2 instanceof Wizard) {
+                player1.receiveAttack(((Wizard) player2).attack());
             }
             if (!player1.isAlive) {
                 System.out.println("player1 " + player1.name + " is dead");
@@ -194,9 +200,9 @@ public class Game {
 
     private ArrayList<Character> getAliveCharacters(ArrayList<Character> playerCharacters) {
         ArrayList<Character> aliveCharacters = new ArrayList<>();
-        for (int i = 0; i < playerCharacters.size(); i++) {
-            if (playerCharacters.get(i).isAlive()) {
-                aliveCharacters.add(playerCharacters.get(i));
+        for (Character playerCharacter : playerCharacters) {
+            if (playerCharacter.isAlive()) {
+                aliveCharacters.add(playerCharacter);
             }
         }
         return aliveCharacters;

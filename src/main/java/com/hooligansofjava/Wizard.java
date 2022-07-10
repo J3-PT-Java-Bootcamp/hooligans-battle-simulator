@@ -5,23 +5,9 @@ public class Wizard extends Character implements Attacker {
     private int mana;
     private int intelligence;
 
-    final static String[] nameWizardsArray = {"Urhan", "Ejamar", "Ataz", "Ugovras"};
 
-    public Wizard() {
-        super( randomName(), randomNumber(100, 100));
-        setIntelligence(randomNumber(49, 1));
-        setMana(randomNumber(40, 10));
-    }
 
-    private static int randomNumber(int x, int x1) {
-      return (int) (Math.random() * x + x1);
 
-    }
-
-    private static String randomName() {
-        return nameWizardsArray[(int) (Math.random() * nameWizardsArray.length)];
-
-    }
 
 
     public Wizard( String name, int hp, int mana, int intelligence) {
