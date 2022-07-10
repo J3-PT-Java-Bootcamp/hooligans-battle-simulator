@@ -3,6 +3,7 @@ package com.hooligansofjava;
 import com.google.gson.Gson;
 import net.datafaker.Faker;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -16,13 +17,14 @@ public class Game {
         Game.partyPlayer2 = partyPlayer2;
 
     }
-    public Game(){
+
+    public Game() {
 
     }
 
     public static String generateJson() {
         Gson gson = new Gson();
-        return"{\"game\":{\"player1\":[" + gson.toJson(partyPlayer1) + "},".concat("{\"player2\":" + gson.toJson(partyPlayer2) + "}]}");
+        return "{\"game\":[{\"player1\":" + gson.toJson(partyPlayer1) + "},".concat("{\"player2\":" + gson.toJson(partyPlayer2) + "}]}");
 
     }
 
@@ -31,12 +33,21 @@ public class Game {
 
     }
 
-    public Game startConsole() {
+    public Game startConsole(){
         System.out.println("Welcome to the game of Hooligans of JAVA: ");
         Faker faker = new Faker();
         Scanner sc = new Scanner(System.in);
         int playerId = 0;
         int players = 0;
+        boolean readPreviousParty = ConsoleQuery.queryToConsole(sc, "Read previous party?");
+        if (readPreviousParty) {
+            try {
+            parseJson(FileReadAndWrite.readFile());
+            players = 2;
+            }catch (IOException e){
+                System.out.println("error reading file, Initiating normal game...");
+            }
+        }
         while (players != 2) {
             int player = 0;
             if (playerId == 0) {
