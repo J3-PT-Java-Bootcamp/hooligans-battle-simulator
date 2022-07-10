@@ -1,29 +1,13 @@
 package com.hooligansofjava;
 
-public class Warrior extends Character implements Attacker{
+public class Warrior extends Character implements Attacker {
 
     private int stamina;
     private int strength;
 
-    private static String [] nameWarriorsArray = {"Ragnar","Marco Aurelio","Svenhylde","Hrigjold"};
 
-    public Warrior(){
-        super(  randomName(),randomNumber(100,100));
-        setStamina(randomNumber(40,10));
-        setStrength(randomNumber(9,1));
-    }
-
-    private static int randomNumber(int x, int x1) {
-        return  (int)(Math.random()* x + x1);
-    }
-
-    private static String randomName() {
-        return nameWarriorsArray[(int) Math.random()*nameWarriorsArray.length];
-    }
-
-
-    public Warrior( String name, int hp, int stamina, int strength) {
-        super( name, hp);
+    public Warrior(String name, int hp, int stamina, int strength) {
+        super(name, hp);
         setStamina(stamina);
         setStrength(strength);
     }
@@ -53,17 +37,18 @@ public class Warrior extends Character implements Attacker{
                 " hp= " + hp +
                 " isAlive= " + isAlive +
                 " stamina = " + stamina +
-                " strength = "+ strength;
+                " strength = " + strength;
     }
 
     @Override
-    public int attack(){
-        if(stamina>=5) {
-            stamina -= 5;
-            return strength;
+    public int attack() {
+        if (this.stamina >= 5) {
+            this.stamina -= 5;
+            return this.strength;
         }
-        stamina++;
-        return strength/2;
+        this.stamina++;
+
+        return this.strength / 2;
     }
 
 }
