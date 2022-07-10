@@ -8,7 +8,7 @@ public class Warrior extends Character implements Attacker{
     private static String [] nameWarriorsArray = {"Ragnar","Marco Aurelio","Svenhylde","Hrigjold"};
 
     public Warrior(){
-        super( randomNumber(1000,1), randomName(),randomNumber(100,100));
+        super(  randomName(),randomNumber(100,100));
         setStamina(randomNumber(40,10));
         setStrength(randomNumber(9,1));
     }
@@ -22,8 +22,8 @@ public class Warrior extends Character implements Attacker{
     }
 
 
-    public Warrior(int id, String name, int hp, int stamina, int strength) {
-        super(id, name, hp);
+    public Warrior( String name, int hp, int stamina, int strength) {
+        super( name, hp);
         setStamina(stamina);
         setStrength(strength);
     }

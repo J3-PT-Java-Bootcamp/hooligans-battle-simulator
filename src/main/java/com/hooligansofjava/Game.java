@@ -1,28 +1,83 @@
 package com.hooligansofjava;
-
+import com.google.gson.Gson;
 import net.datafaker.Faker;
-
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
-    static ArrayList<Character> partyPlayer1 = new ArrayList<>();
-    static ArrayList<Character> partyPlayer2 = new ArrayList<>();
+    final ArrayList<Character> partyPlayer1 = new ArrayList<>();
+    final ArrayList<Character> partyPlayer2 = new ArrayList<>();
 
-    public static void main(String[] args) {
+
+    public Game() {
+
+    }
+
+    public String generateJson() {
+        Gson gson = new Gson();
+        ArrayList<Wizard> player1Wizards;
+        player1Wizards = partyPlayer1.stream().filter(x -> x instanceof Wizard).map(x -> (Wizard) x).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        ArrayList<Warrior> player1Warriors;
+        player1Warriors = partyPlayer1.stream().filter(x -> x instanceof Warrior).map(x -> (Warrior) x).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        ArrayList<Wizard> player2Wizards;
+        player2Wizards = partyPlayer2.stream().filter(x -> x instanceof Wizard).map(x -> (Wizard) x).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        ArrayList<Warrior> player2Warriors;
+        player2Warriors = partyPlayer2.stream().filter(x -> x instanceof Warrior).map(x -> (Warrior) x).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        return "%s Warriors::%s player2::%sWarriors::%s".formatted(gson.toJson(player1Wizards), gson.toJson(player1Warriors), gson.toJson(player2Wizards), gson.toJson(player2Warriors));
+
+    }
+
+    public void parseJson(String JSONText) {
+        Gson gson = new Gson();
+        String[] player = JSONText.split("player2::");
+        String player1 = player[0];
+        String player2 = player[1];
+
+        String player1Wizards = player1.split("Warriors::")[0];
+        String player1Warriors = player1.split("Warriors::")[1];
+        String player2Wizards = player2.split("Warriors::")[0];
+        String player2Warriors = player2.split("Warriors::")[1];
+
+        Warrior[] loadedWarriors = gson.fromJson(player1Wizards, Warrior[].class);
+        Wizard[] loadedWizards = gson.fromJson(player1Warriors, Wizard[].class);
+        Warrior[] loadedWarriors2 = gson.fromJson(player2Warriors, Warrior[].class);
+        Wizard[] loadedWizards2 = gson.fromJson(player2Wizards, Wizard[].class);
+
+        partyPlayer1.addAll(Arrays.asList(loadedWarriors));
+        partyPlayer1.addAll(Arrays.asList(loadedWizards));
+        partyPlayer2.addAll(Arrays.asList(loadedWarriors2));
+        partyPlayer2.addAll(Arrays.asList(loadedWizards2));
+        System.out.println("player1" + partyPlayer1.get(1));
+
+
+    }
+
+    public Game startConsole() {
         System.out.println("Welcome to the game of Hooligans of JAVA: ");
         Faker faker = new Faker();
         Scanner sc = new Scanner(System.in);
-        int playerId= 0;
+        int playerId = 0;
         int players = 0;
+        boolean readPreviousParty = ConsoleQuery.queryToConsole(sc, "Read previous party?");
+        if (readPreviousParty) {
+            try {
+                System.out.println("reading file");
+                parseJson(FileReadAndWrite.readFile());
+                players = 2;
+            } catch (IOException e) {
+                System.out.println("error reading file, Initiating normal game...");
+            }
+        }
         while (players != 2) {
             int player = 0;
-            if(playerId==0){
+            if (playerId == 0) {
                 player = ConsoleQuery.queryToConsole(sc, "Select a player to start the set up:", new String[]{"Player 1", "Player 2"}, 1, 2);
-            }else if(playerId==1){
+            } else if (playerId == 1) {
                 player = 2;
-            }else if (playerId==2){
+            } else if (playerId == 2) {
                 player = 1;
             }
             players++;
@@ -34,11 +89,12 @@ public class Game {
             int wizardCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of wizards.", 1, 10);
             generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount);
         }
+        System.out.println("end reading data from terminal");
 
-
+        return null;
     }
 
-    private static void generateCharacterLoop(Faker faker, Scanner sc, TypeOfCharacter type, int player, int count) {
+    private void generateCharacterLoop(Faker faker, Scanner sc, TypeOfCharacter type, int player, int count) {
         for (int i = 0; i < count; i++) {
             Character newCharacter;
             boolean customCharacter = ConsoleQuery.queryToConsole(sc, "Do you want to create a customized character? (Y/N)");
@@ -49,15 +105,15 @@ public class Game {
             }
             System.out.println(newCharacter);
             if (player == 1) {
-                partyPlayer1.add(newCharacter);
+                this.partyPlayer1.add(newCharacter);
             } else {
-                partyPlayer2.add(newCharacter);
+                this.partyPlayer2.add(newCharacter);
             }
         }
     }
 
     public static boolean checkValidNumber(String characterNumber) {
-        int number ;
+        int number;
         if (characterNumber == null) {
             return false;
         }
@@ -72,7 +128,7 @@ public class Game {
 
     private static int generateRandomNumber(int min, int max) {
         Random random = new Random();
-        return random.nextInt() % (max - min + 1);
+        return random.nextInt() * (max - min + 1);
     }
 
     private static Character createRandomCharacter(TypeOfCharacter type, Faker faker) {
@@ -101,7 +157,7 @@ public class Game {
             }
         }
         health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between 1 - 100)", 1, 100);
-        name = ConsoleQuery.queryToConsoleText(sc, "Finally, set a funny name for you Hero!" );
+        name = ConsoleQuery.queryToConsoleText(sc, "Finally, set a funny name for you Hero!");
         System.out.println("Finally, set a funny name for you Hero!");
         return createCharacter(type, name, health, firstAttribute, secondAttribute);
     }

@@ -3,27 +3,29 @@ package com.hooligansofjava;
 import net.datafaker.Faker;
 
 import java.util.Random;
+import java.util.UUID;
 
 public abstract class Character {
-    protected int id;
+    protected String id;
     protected String name;
     protected int hp;
     protected boolean isAlive;
 
 
 
-    public Character(int id, String name, int hp) {
-        setId(id);
+    public Character( String name, int hp) {
+        setId();
         setName(name);
         setHp(hp);
         setAlive(true);
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
-    public void setId(int id) {
-        this.id = id;
+    public void setId( ) {
+        UUID uuid = UUID.randomUUID();
+        this.id = uuid.toString();
     }
     public String getName() {
         return name;
