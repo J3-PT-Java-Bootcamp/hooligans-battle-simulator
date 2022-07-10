@@ -1,13 +1,14 @@
 package com.hooligansofjava;
 
-import net.datafaker.Faker;
-import java.util.Random;
+import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        Game.startConsole();
+        Game newGame = new Game();
+        newGame.startConsole();
         System.out.println(Game.generateJson());
+        FileReadAndWrite.writeFile(newGame);
 
 
 

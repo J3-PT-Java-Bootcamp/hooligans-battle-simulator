@@ -6,7 +6,6 @@ import net.datafaker.Faker;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.SortedMap;
 
 public class Game {
     static ArrayList<Character> partyPlayer1 = new ArrayList<>();
@@ -17,18 +16,22 @@ public class Game {
         Game.partyPlayer2 = partyPlayer2;
 
     }
+    public Game(){
+
+    }
 
     public static String generateJson() {
         Gson gson = new Gson();
-        return"{\"game\":{player1:[" + gson.toJson(partyPlayer1) + "},".concat("{\"player2\":" + gson.toJson(partyPlayer2) + "}]}");
+        return"{\"game\":{\"player1\":[" + gson.toJson(partyPlayer1) + "},".concat("{\"player2\":" + gson.toJson(partyPlayer2) + "}]}");
 
     }
 
-    public static void parseJson() {
+    public static void parseJson(String JSONText) {
+
 
     }
 
-    public static void startConsole() {
+    public Game startConsole() {
         System.out.println("Welcome to the game of Hooligans of JAVA: ");
         Faker faker = new Faker();
         Scanner sc = new Scanner(System.in);
@@ -53,15 +56,16 @@ public class Game {
             generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount);
         }
         System.out.println("end reading data from terminal");
-        for (int i = 0; i < partyPlayer1.size(); i++) {
-            System.out.println(partyPlayer1.get(i));
+        for (Character character : partyPlayer1) {
+            System.out.println(character);
 
         }
-        for (int i = 0; i < partyPlayer2.size(); i++) {
-            System.out.println(partyPlayer2.get(i));
+        for (Character character : partyPlayer2) {
+            System.out.println(character);
 
         }
 
+        return null;
     }
 
     private static void generateCharacterLoop(Faker faker, Scanner sc, TypeOfCharacter type, int player, int count) {
