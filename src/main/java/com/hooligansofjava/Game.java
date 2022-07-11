@@ -143,21 +143,24 @@ public class Game {
 
     private static Character createCustomizedCharacter(Scanner sc, TypeOfCharacter type) {
         String name;
-        int health;
+        int health = 0;
         Integer firstAttribute = null;
         Integer secondAttribute = null;
 
         switch (type) {
             case WARRIOR -> {
-                firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much stamina do you want to set - (Choose a number between 10 - 50)", TypeOfCharacter.WARRIOR.firstParamMin, TypeOfCharacter.WARRIOR.firstParamMax);
-                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much strength do you want to set - (Choose a number between 10 - 50)", TypeOfCharacter.WARRIOR.secondParamMin, TypeOfCharacter.WARRIOR.secondParamMax);
+                firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much stamina do you want to set - (Choose a number between %o - %o)".formatted(TypeOfCharacter.WARRIOR.firstParamMin, TypeOfCharacter.WARRIOR.firstParamMax), TypeOfCharacter.WARRIOR.firstParamMin, TypeOfCharacter.WARRIOR.firstParamMax);
+                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much strength do you want to set - (Choose a number between  %o - %o)".formatted(TypeOfCharacter.WARRIOR.secondParamMin, TypeOfCharacter.WARRIOR.secondParamMax), TypeOfCharacter.WARRIOR.secondParamMin, TypeOfCharacter.WARRIOR.secondParamMax);
+                health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between  %o - %o)".formatted(TypeOfCharacter.WARRIOR.HP_Min, TypeOfCharacter.WARRIOR.HP_Max), TypeOfCharacter.WARRIOR.HP_Min, TypeOfCharacter.WARRIOR.HP_Max);
+
             }
             case WIZARD -> {
-                firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much mana do you want to set - (Choose a number between 10 - 50)", TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.secondParamMax);
-                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much intelligence do you want to set - (Choose a number between 10 - 50)", TypeOfCharacter.WIZARD.secondParamMin, TypeOfCharacter.WIZARD.secondParamMax);
+                firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much mana do you want to set - (Choose a number between  %o - %o)".formatted(TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax), TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.secondParamMax);
+                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much intelligence do you want to set - (Choose a number between  %o - %o)".formatted(TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax), TypeOfCharacter.WIZARD.secondParamMin, TypeOfCharacter.WIZARD.secondParamMax);
+                health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between %o - %o)".formatted(TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax), TypeOfCharacter.WIZARD.HP_Min, TypeOfCharacter.WIZARD.HP_Max);
+
             }
         }
-        health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between 1 - 100)", 1, 100);
         name = ConsoleQuery.queryToConsoleText(sc, "Finally, set a funny name for you Hero!");
         System.out.println("Finally, set a funny name for you Hero!");
         return createCharacter(type, name, health, firstAttribute, secondAttribute);
@@ -172,18 +175,9 @@ public class Game {
             System.out.println("player1 " + player1.name + " (" + player1.getHp() + " ) Attacks " + "--> player2 " + player2.name + " (" + player2.getHp() + ")");
             System.out.println("player2 " + player2.name + " Attacks --> player1 " + player1.name);
 
-            if (player1 instanceof Warrior) {
-                player2.receiveAttack(((Warrior) player1).attack());
-            }
-            if (player1 instanceof Wizard) {
-                player2.receiveAttack(((Wizard) player1).attack());
-            }
-            if (player2 instanceof Warrior) {
-                player1.receiveAttack(((Warrior) player2).attack());
-            }
-            if (player2 instanceof Wizard) {
-                player1.receiveAttack(((Wizard) player2).attack());
-            }
+            player2.receiveAttack((player1).attack());
+            player1.receiveAttack((player2).attack());
+
             if (!player1.isAlive) {
                 System.out.println("player1 " + player1.name + " is dead");
             }

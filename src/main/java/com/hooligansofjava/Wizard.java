@@ -1,15 +1,35 @@
 package com.hooligansofjava;
 
-public class Wizard extends Character implements Attacker {
+import net.datafaker.Faker;
+
+import static com.hooligansofjava.Utils.getRandomNumber;
+
+public class Wizard extends Character {
 
     private int mana;
+    private int hp;
     private int intelligence;
 
 
     public Wizard(String name, int hp, int mana, int intelligence) {
-        super(name, hp);
+        super(name);
         setMana(mana);
         setIntelligence(intelligence);
+        setHp(hp);
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        if(hp <TypeOfCharacter.WIZARD.HP_Min) {
+            this.hp = TypeOfCharacter.WIZARD.HP_Min;
+        } else if(hp > TypeOfCharacter.WIZARD.HP_Max) {
+            this.hp = TypeOfCharacter.WIZARD.HP_Max;
+        } else {
+            this.hp = hp;
+        }
     }
 
     public int getMana() {
@@ -54,6 +74,22 @@ public class Wizard extends Character implements Attacker {
         }
         mana++;
         return 2;
+    }
+
+    @Override
+    public void generateRandomCharacter(Faker faker) {
+        Wizard newWizard = new Wizard(faker.name().fullName(), getRandomNumber(TypeOfCharacter.WIZARD.HP_Min,TypeOfCharacter.WIZARD.HP_Max), getRandomNumber(TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax),getRandomNumber(TypeOfCharacter.WIZARD.secondParamMin, TypeOfCharacter.WIZARD.secondParamMax));
+    }
+
+    @Override
+    public int receiveAttack(int damage){
+        if(damage >= getHp()){
+            setAlive(false);
+            setHp(0);
+        }else {
+            setHp(getHp()-damage);
+        }
+        return getHp();
     }
 
 
