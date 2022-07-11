@@ -32,7 +32,13 @@ public class Wizard extends Character implements Attacker {
 
 
     public void setIntelligence(int intelligence) {
-        this.intelligence = intelligence;
+        if (intelligence < TypeOfCharacter.WIZARD.secondParamMin) {
+            this.intelligence = TypeOfCharacter.WIZARD.secondParamMin;
+        } else if (intelligence > TypeOfCharacter.WIZARD.secondParamMax) {
+            this.intelligence = TypeOfCharacter.WIZARD.secondParamMax;
+        } else {
+            this.intelligence = intelligence;
+        }
     }
 
     @Override
