@@ -1,15 +1,43 @@
 package com.hooligansofjava;
 
-public class Warrior extends Character implements Attacker {
+import net.datafaker.Faker;
+
+import static com.hooligansofjava.Utils.getRandomNumber;
+
+public class Warrior extends Character {
 
     private int stamina;
+    private int hp;
     private int strength;
 
 
     public Warrior(String name, int hp, int stamina, int strength) {
-        super(name, hp);
+        super(name);
         setStamina(stamina);
         setStrength(strength);
+        setHp(hp);
+    }
+
+    public int getHp() {
+        return this.hp;
+    }
+
+    public void setHp(int hp) {
+        if (hp < TypeOfCharacter.WARRIOR.HP_Min) {
+            this.hp = TypeOfCharacter.WARRIOR.HP_Min;
+        } else if (hp > TypeOfCharacter.WARRIOR.HP_Max) {
+            this.hp = TypeOfCharacter.WARRIOR.HP_Max;
+        } else {
+            this.hp = hp;
+        }
+    }
+
+    @Override
+    public void generateRandomCharacter(Faker faker) {
+        super(faker.name().firstName());
+        setStamina(getRandomNumber(TypeOfCharacter.WARRIOR.firstParamMin, TypeOfCharacter.WARRIOR.firstParamMax));
+        setStrength(getRandomNumber(TypeOfCharacter.WARRIOR.secondParamMin, TypeOfCharacter.WARRIOR.secondParamMax));
+        setHp(getRandomNumber(TypeOfCharacter.WARRIOR.HP_Min, TypeOfCharacter.WARRIOR.HP_Max));
     }
 
     public int getStamina() {
@@ -49,6 +77,17 @@ public class Warrior extends Character implements Attacker {
         this.stamina++;
 
         return this.strength / 2;
+    }
+
+    @Override
+    public int receiveAttack(int damage) {
+        if (damage >= getHp()) {
+            setAlive(false);
+            setHp(0);
+        } else {
+            setHp(getHp() - damage);
+        }
+        return getHp();
     }
 
 }
