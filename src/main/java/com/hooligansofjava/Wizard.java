@@ -21,7 +21,13 @@ public class Wizard extends Character implements Attacker {
     }
 
     public void setMana(int mana) {
+        if(mana < TypeOfCharacter.WIZARD.firstParamMin) {
+            this.mana = TypeOfCharacter.WIZARD.firstParamMin ;
+        }else if(mana > TypeOfCharacter.WIZARD.firstParamMin){
+            this.mana = TypeOfCharacter.WIZARD.firstParamMin;
+        }else{
         this.mana = mana;
+        }
     }
 
     public int getIntelligence() {
