@@ -6,12 +6,8 @@ public class Wizard extends Character implements Attacker {
     private int intelligence;
 
 
-
-
-
-
-    public Wizard( String name, int hp, int mana, int intelligence) {
-        super( name, hp);
+    public Wizard(String name, int hp, int mana, int intelligence) {
+        super(name, hp);
         setMana(mana);
         setIntelligence(intelligence);
     }
@@ -21,12 +17,12 @@ public class Wizard extends Character implements Attacker {
     }
 
     public void setMana(int mana) {
-        if(mana < TypeOfCharacter.WIZARD.firstParamMin) {
-            this.mana = TypeOfCharacter.WIZARD.firstParamMin ;
-        }else if(mana > TypeOfCharacter.WIZARD.firstParamMin){
+        if (mana < TypeOfCharacter.WIZARD.firstParamMin) {
             this.mana = TypeOfCharacter.WIZARD.firstParamMin;
-        }else{
-        this.mana = mana;
+        } else if (mana > TypeOfCharacter.WIZARD.firstParamMax) {
+            this.mana = TypeOfCharacter.WIZARD.firstParamMax;
+        } else {
+            this.mana = mana;
         }
     }
 
