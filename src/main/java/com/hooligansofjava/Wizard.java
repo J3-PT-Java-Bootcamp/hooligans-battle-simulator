@@ -1,15 +1,31 @@
 package com.hooligansofjava;
 
-public class Wizard extends Character implements Attacker {
+public class Wizard extends Character {
 
     private int mana;
+    private int hp;
     private int intelligence;
 
 
     public Wizard(String name, int hp, int mana, int intelligence) {
-        super(name, hp);
+        super(name);
         setMana(mana);
         setIntelligence(intelligence);
+        setHp(hp);
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        if (hp < TypeOfCharacter.WIZARD.HP_Min) {
+            this.hp = TypeOfCharacter.WIZARD.HP_Min;
+        } else if (hp > TypeOfCharacter.WIZARD.HP_Max) {
+            this.hp = TypeOfCharacter.WIZARD.HP_Max;
+        } else {
+            this.hp = hp;
+        }
     }
 
     public int getMana() {
@@ -46,14 +62,26 @@ public class Wizard extends Character implements Attacker {
         return "Wizard{" + "mana=" + mana + ", intelligence=" + intelligence + ", id=" + id + ", name='" + name + '\'' + ", hp=" + hp + ", isAlive=" + isAlive + "} " + super.toString();
     }
 
-    @Override
+
     public int attack() {
         if (mana >= 5) {
-            mana -= 5;
-            return intelligence;
+            mana = getMana() - 5;
+            return getIntelligence();
         }
         mana++;
         return 2;
+    }
+
+
+    @Override
+    public int receiveAttack(int damage) {
+        if (damage >= getHp()) {
+            setAlive(false);
+            setHp(0);
+        } else {
+            hp = getHp() - damage;
+        }
+        return getHp();
     }
 
 

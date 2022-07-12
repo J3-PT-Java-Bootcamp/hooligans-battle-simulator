@@ -1,11 +1,11 @@
 package com.hooligansofjava;
 
+import net.datafaker.Faker;
+
 public interface Attacker {
 
-    public int attack();
-
-
-
-
+     int attack();
+     int receiveAttack(int damage);
+     int getHp();
 
 }
