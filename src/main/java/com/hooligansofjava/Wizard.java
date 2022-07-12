@@ -1,9 +1,5 @@
 package com.hooligansofjava;
 
-import net.datafaker.Faker;
-
-import static com.hooligansofjava.Utils.getRandomNumber;
-
 public class Wizard extends Character {
 
     private int mana;
