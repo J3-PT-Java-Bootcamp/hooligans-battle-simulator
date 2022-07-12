@@ -76,10 +76,6 @@ public class Wizard extends Character {
         return 2;
     }
 
-    @Override
-    public void generateRandomCharacter(Faker faker) {
-        Wizard newWizard = new Wizard(faker.name().fullName(), getRandomNumber(TypeOfCharacter.WIZARD.HP_Min,TypeOfCharacter.WIZARD.HP_Max), getRandomNumber(TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax),getRandomNumber(TypeOfCharacter.WIZARD.secondParamMin, TypeOfCharacter.WIZARD.secondParamMax));
-    }
 
     @Override
     public int receiveAttack(int damage){

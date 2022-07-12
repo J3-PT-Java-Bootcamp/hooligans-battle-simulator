@@ -32,13 +32,6 @@ public class Warrior extends Character {
         }
     }
 
-    @Override
-    public void generateRandomCharacter(Faker faker) {
-        super(faker.name().firstName());
-        setStamina(getRandomNumber(TypeOfCharacter.WARRIOR.firstParamMin, TypeOfCharacter.WARRIOR.firstParamMax));
-        setStrength(getRandomNumber(TypeOfCharacter.WARRIOR.secondParamMin, TypeOfCharacter.WARRIOR.secondParamMax));
-        setHp(getRandomNumber(TypeOfCharacter.WARRIOR.HP_Min, TypeOfCharacter.WARRIOR.HP_Max));
-    }
 
     public int getStamina() {
         return stamina;
