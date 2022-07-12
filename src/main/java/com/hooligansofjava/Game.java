@@ -13,21 +13,18 @@ public class Game {
     final ArrayList<Character> partyPlayer1 = new ArrayList<>();
     final ArrayList<Character> partyPlayer2 = new ArrayList<>();
 
-
     public Game() {
 
     }
     //generar 2 arrays (player 1 y player 2) con size n
     //llenar esos arrays de random characters
-    public void randomParty(){
+    public void randomParty() {
         Faker fc = new Faker();
-
-        int index = generateRandomNumber(1,100);
+        final CharacterFactory characterFactory = new CharacterFactory(fc);
+        int index = generateRandomNumber(1, 100);
         for (int i = 0; i < index; i++) {
-            int random1 = generateRandomNumber(0,1);
-            int random2 = generateRandomNumber(0,1);
-            partyPlayer1.add(createRandomCharacter(TypeOfCharacter.values()[random1], fc));
-            partyPlayer2.add(createRandomCharacter(TypeOfCharacter.values()[random2], fc));
+            partyPlayer1.add(characterFactory.createRandomCharacter());
+            partyPlayer2.add(characterFactory.createRandomCharacter());
         }
     }
 
@@ -71,7 +68,6 @@ public class Game {
 
     public Game startConsole() {
         System.out.println("Welcome to the game of Hooligans of JAVA: ");
-        Faker faker = new Faker();
         Scanner sc = new Scanner(System.in);
         int playerId = 0;
         int players = 0;
@@ -99,25 +95,30 @@ public class Game {
             System.out.println("Hello Player " + player);
             System.out.println("Now, you have to select the number of warriors and wizards.");
             int warriorCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of warriors.", 1, 10);
-            generateCharacterLoop(faker, sc, TypeOfCharacter.WARRIOR, player, warriorCount);
+            generateCharacterLoop(sc, TypeOfCharacter.WARRIOR, player, warriorCount);
             int wizardCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of wizards.", 1, 10);
-            generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount);
+            generateCharacterLoop(sc, TypeOfCharacter.WIZARD, player, wizardCount);
         }
         System.out.println("end reading data from terminal");
 
         return null;
     }
 
-    private void generateCharacterLoop(Faker faker, Scanner sc, TypeOfCharacter type, int player, int count) {
+    private void generateCharacterLoop(Scanner sc, TypeOfCharacter type, int player, int count) {
+        Faker fc = new Faker();
+        final CharacterFactory characterFactory = new CharacterFactory(fc);
         for (int i = 0; i < count; i++) {
             Character newCharacter;
             boolean customCharacter = ConsoleQuery.queryToConsole(sc, "Do you want to create a customized character? (Y/N)");
             if (customCharacter) {
                 newCharacter = createCustomizedCharacter(sc, type);
             } else {
-                newCharacter = createRandomCharacter(type, faker);
+                if (type == TypeOfCharacter.WARRIOR) {
+                    newCharacter = characterFactory.createRandomWarrior();
+                } else {
+                    newCharacter = characterFactory.createRandomWizard();
+                }
             }
-            System.out.println(newCharacter);
             if (player == 1) {
                 this.partyPlayer1.add(newCharacter);
             } else {
@@ -145,38 +146,32 @@ public class Game {
         return random.nextInt((max - min + 1) + min);
     }
 
-    private static Character createRandomCharacter(TypeOfCharacter type, Faker faker) {
-        return CharacterFactory.getCharacter(type, generateRandomNumber(1, 50), faker.name().fullName(), generateRandomNumber(50, 100), generateRandomNumber(10, 100), generateRandomNumber(10, 100));
-    }
 
-    private static Character createCharacter(TypeOfCharacter type, String name, int hp, int classFirstAttribute, int classSecondAttribute) {
-        // classFirstAttribute and classSecondAttribute corresponds to stamina and strength for Warrior and mana and intelligence for Wizard
-        return CharacterFactory.getCharacter(type, generateRandomNumber(1, 50), name, hp, classFirstAttribute, classSecondAttribute);
-    }
-
-    private static Character createCustomizedCharacter(Scanner sc, TypeOfCharacter type) {
+      private static Character createCustomizedCharacter(Scanner sc, TypeOfCharacter type) {
+        Faker fc = new Faker();
+        final CharacterFactory characterFactory = new CharacterFactory(fc);
         String name;
-        int health = 0;
-        Integer firstAttribute = null;
-        Integer secondAttribute = null;
+        int health ;
+        int firstAttribute ;
+        int secondAttribute ;
 
+        name = ConsoleQuery.queryToConsoleText(sc, "Finally, set a funny name for you Hero!");
+        System.out.println("First, set a funny name for you Hero!");
         switch (type) {
             case WARRIOR -> {
+                health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between  %o - %o)".formatted(TypeOfCharacter.WARRIOR.HP_Min, TypeOfCharacter.WARRIOR.HP_Max), TypeOfCharacter.WARRIOR.HP_Min, TypeOfCharacter.WARRIOR.HP_Max);
                 firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much stamina do you want to set - (Choose a number between %o - %o)".formatted(TypeOfCharacter.WARRIOR.firstParamMin, TypeOfCharacter.WARRIOR.firstParamMax), TypeOfCharacter.WARRIOR.firstParamMin, TypeOfCharacter.WARRIOR.firstParamMax);
                 secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much strength do you want to set - (Choose a number between  %o - %o)".formatted(TypeOfCharacter.WARRIOR.secondParamMin, TypeOfCharacter.WARRIOR.secondParamMax), TypeOfCharacter.WARRIOR.secondParamMin, TypeOfCharacter.WARRIOR.secondParamMax);
-                health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between  %o - %o)".formatted(TypeOfCharacter.WARRIOR.HP_Min, TypeOfCharacter.WARRIOR.HP_Max), TypeOfCharacter.WARRIOR.HP_Min, TypeOfCharacter.WARRIOR.HP_Max);
-
+                return characterFactory.createWarrior(name, health, firstAttribute, secondAttribute);
             }
             case WIZARD -> {
+                health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between %o - %o)".formatted(TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax), TypeOfCharacter.WIZARD.HP_Min, TypeOfCharacter.WIZARD.HP_Max);
                 firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much mana do you want to set - (Choose a number between  %o - %o)".formatted(TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax), TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.secondParamMax);
                 secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much intelligence do you want to set - (Choose a number between  %o - %o)".formatted(TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax), TypeOfCharacter.WIZARD.secondParamMin, TypeOfCharacter.WIZARD.secondParamMax);
-                health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between %o - %o)".formatted(TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax), TypeOfCharacter.WIZARD.HP_Min, TypeOfCharacter.WIZARD.HP_Max);
-
+                return characterFactory.createWizard(name, health, firstAttribute, secondAttribute);
             }
         }
-        name = ConsoleQuery.queryToConsoleText(sc, "Finally, set a funny name for you Hero!");
-        System.out.println("Finally, set a funny name for you Hero!");
-        return createCharacter(type, name, health, firstAttribute, secondAttribute);
+        return null;
     }
 
     public void startGame() {
@@ -225,4 +220,8 @@ public class Game {
         }
         return aliveCharacters;
     }
+
+
+
+
 }

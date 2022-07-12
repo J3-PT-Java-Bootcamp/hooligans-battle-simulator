@@ -8,12 +8,10 @@ import java.util.UUID;
 public abstract class Character implements Attacker {
     protected String id;
     protected String name;
-
     protected boolean isAlive;
 
 
-
-    public Character( String name) {
+    public Character(String name) {
         setId();
         setName(name);
         setAlive(true);
@@ -22,13 +20,16 @@ public abstract class Character implements Attacker {
     public String getId() {
         return id;
     }
-    public void setId( ) {
+
+    public void setId() {
         UUID uuid = UUID.randomUUID();
         this.id = uuid.toString();
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -36,20 +37,10 @@ public abstract class Character implements Attacker {
     public boolean isAlive() {
         return isAlive;
     }
+
     public void setAlive(boolean alive) {
         isAlive = alive;
     }
-
-    @Override
-    public String toString() {
-        return "Character{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", hp=" + hp +
-                ", isAlive=" + isAlive +
-                '}';
-    }
-
 
 
 
