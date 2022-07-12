@@ -145,7 +145,7 @@ public class Game {
 
     private static int generateRandomNumber(int min, int max) {
         Random random = new Random();
-        return random.nextInt() * (max - min + 1);
+        return random.nextInt( (max - min + 1)+min);
     }
 
     private static Character createRandomCharacter(TypeOfCharacter type, Faker faker) {
@@ -178,7 +178,6 @@ public class Game {
         System.out.println("Finally, set a funny name for you Hero!");
         return createCharacter(type, name, health, firstAttribute, secondAttribute);
     }
-
     public void startGame() {
         System.out.println("The game has started!");
 
