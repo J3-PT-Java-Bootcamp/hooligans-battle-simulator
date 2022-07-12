@@ -186,8 +186,8 @@ public class Game {
             System.out.println("player1 " + player1.name + " (" + player1.getHp() + " ) Attacks " + "--> player2 " + player2.name + " (" + player2.getHp() + ")");
             System.out.println("player2 " + player2.name + " Attacks --> player1 " + player1.name);
 
-            player2.receiveAttack((player1).attack());
-            player1.receiveAttack((player2).attack());
+            player2.receiveAttack(player1.attack());
+            player1.receiveAttack(player2.attack());
 
             if (!player1.isAlive) {
                 System.out.println("player1 " + player1.name + " is dead");
