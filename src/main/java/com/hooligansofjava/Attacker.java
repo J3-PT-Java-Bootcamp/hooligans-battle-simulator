@@ -4,14 +4,9 @@ import net.datafaker.Faker;
 
 public interface Attacker {
 
-    public int attack();
-    public void generateRandomCharacter(Faker faker);
+     int attack();
 
-    public int receiveAttack(int damage);
-    public int getHp();
-
-
-
-
+     int receiveAttack(int damage);
+     int getHp();
 
 }
