@@ -129,7 +129,7 @@ public class Game {
 
     private static int generateRandomNumber(int min, int max) {
         Random random = new Random();
-        return random.nextInt((max - min + 1) + min);
+        return random.nextInt() * (max - min + 1);
     }
 
     private static Character createRandomCharacter(TypeOfCharacter type, Faker faker) {
@@ -164,7 +164,6 @@ public class Game {
     }
 
     public void startGame() {
-        Graveyard graveyard = new Graveyard();
         System.out.println("The game has started!");
 
         while (getAliveCharacters(partyPlayer1).size() > 0 && getAliveCharacters(partyPlayer2).size() > 0) {
@@ -196,17 +195,6 @@ public class Game {
             System.out.println("player2 wins");
         } else {
             System.out.println("player1 wins");
-        }
-
-        sendDeathPlayersToTheGraveyard(partyPlayer1, graveyard, 1);
-        sendDeathPlayersToTheGraveyard(partyPlayer2, graveyard, 2);
-
-        graveyard.printGraveyard();
-    }
-
-    private void sendDeathPlayersToTheGraveyard(ArrayList<Character> partyPlayer, Graveyard graveyard, int party) {
-        for(Character player : partyPlayer) {
-            if (!player.isAlive) graveyard.sendCharacterToTheGraveyard(player, party);
         }
     }
 
