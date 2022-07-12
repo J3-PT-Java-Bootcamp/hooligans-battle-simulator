@@ -18,6 +18,22 @@ public class Game {
 
     }
 
+    //generar 2 arrays (player 1 y player 2) con size n
+    //llenar esos arrays de random characters
+    public void randomParty(){
+        Faker fc = new Faker();
+
+        int index = generateRandomNumber(1,100);
+        for (int i = 0; i < index; i++) {
+            int random1 = generateRandomNumber(0,1);
+            int random2 = generateRandomNumber(0,1);
+            partyPlayer1.add(createRandomCharacter(TypeOfCharacter.values()[random1], fc));
+            partyPlayer2.add(createRandomCharacter(TypeOfCharacter.values()[random2], fc));
+        }
+
+    }
+
+
     public String generateJson() {
         Gson gson = new Gson();
         ArrayList<Wizard> player1Wizards;
@@ -207,4 +223,8 @@ public class Game {
         }
         return aliveCharacters;
     }
+
+
+
+
 }
