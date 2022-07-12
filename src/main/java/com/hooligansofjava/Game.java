@@ -155,8 +155,8 @@ public class Game {
         int firstAttribute ;
         int secondAttribute ;
 
-        name = ConsoleQuery.queryToConsoleText(sc, "Finally, set a funny name for you Hero!");
         System.out.println("First, set a funny name for you Hero!");
+        name = ConsoleQuery.queryToConsoleText(sc, "First, set a funny name for you Hero!");
         switch (type) {
             case WARRIOR -> {
                 health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between  %o - %o)".formatted(TypeOfCharacter.WARRIOR.HP_Min, TypeOfCharacter.WARRIOR.HP_Max), TypeOfCharacter.WARRIOR.HP_Min, TypeOfCharacter.WARRIOR.HP_Max);

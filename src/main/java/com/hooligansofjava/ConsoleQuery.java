@@ -61,6 +61,7 @@ public class ConsoleQuery {
             if (choice.trim().length() > 0) {
                 isValid = true;
             result = choice.trim().substring(0, 1).toUpperCase() + choice.trim().substring(1, choice.length()).toLowerCase();
+            result = result.replace("/[-!$%^&*()_+|~=`{}\\[\\]:\";'<>?,.\\/]/","_");
             }
         }
         return result;

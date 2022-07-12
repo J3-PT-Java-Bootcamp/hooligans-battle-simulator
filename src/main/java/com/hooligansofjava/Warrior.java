@@ -64,17 +64,17 @@ public class Warrior extends Character {
     @Override
     public String toString() {
         return "Warrior{" +
-                "id= " + id +
-                " name= '" + name + '\'' +
-                " hp= " + hp +
-                " isAlive= " + isAlive +
-                " stamina = " + stamina +
-                " strength = " + strength;
+                "id= " + getId() +
+                " name= '" + getName() + '\'' +
+                " hp= " + getHp() +
+                " isAlive= " + isAlive() +
+                " stamina = " + getStamina() +
+                " strength = " + getStrength();
     }
 
     public int attack() {
         if (this.stamina >= 5) {
-            this.stamina -= 5;
+            stamina =getStamina()-5;
             return this.strength;
         }
         this.stamina++;
@@ -88,7 +88,8 @@ public class Warrior extends Character {
             setAlive(false);
             setHp(0);
         } else {
-            setHp(getHp() - damage);
+
+            hp = getHp() - damage;
         }
         return getHp();
     }

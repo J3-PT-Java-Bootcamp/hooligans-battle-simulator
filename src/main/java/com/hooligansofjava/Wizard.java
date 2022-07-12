@@ -19,9 +19,9 @@ public class Wizard extends Character {
     }
 
     public void setHp(int hp) {
-        if(hp <TypeOfCharacter.WIZARD.HP_Min) {
+        if (hp < TypeOfCharacter.WIZARD.HP_Min) {
             this.hp = TypeOfCharacter.WIZARD.HP_Min;
-        } else if(hp > TypeOfCharacter.WIZARD.HP_Max) {
+        } else if (hp > TypeOfCharacter.WIZARD.HP_Max) {
             this.hp = TypeOfCharacter.WIZARD.HP_Max;
         } else {
             this.hp = hp;
@@ -62,11 +62,11 @@ public class Wizard extends Character {
         return "Wizard{" + "mana=" + mana + ", intelligence=" + intelligence + ", id=" + id + ", name='" + name + '\'' + ", hp=" + hp + ", isAlive=" + isAlive + "} " + super.toString();
     }
 
-    @Override
+
     public int attack() {
         if (mana >= 5) {
-            mana -= 5;
-            return intelligence;
+            mana = getMana() - 5;
+            return getIntelligence();
         }
         mana++;
         return 2;
@@ -74,12 +74,12 @@ public class Wizard extends Character {
 
 
     @Override
-    public int receiveAttack(int damage){
-        if(damage >= getHp()){
+    public int receiveAttack(int damage) {
+        if (damage >= getHp()) {
             setAlive(false);
             setHp(0);
-        }else {
-            setHp(getHp()-damage);
+        } else {
+            hp = getHp() - damage;
         }
         return getHp();
     }
