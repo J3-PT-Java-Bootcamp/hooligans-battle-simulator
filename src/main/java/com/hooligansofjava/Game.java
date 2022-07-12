@@ -17,6 +17,19 @@ public class Game {
     public Game() {
 
     }
+    //generar 2 arrays (player 1 y player 2) con size n
+    //llenar esos arrays de random characters
+    public void randomParty(){
+        Faker fc = new Faker();
+
+        int index = generateRandomNumber(1,100);
+        for (int i = 0; i < index; i++) {
+            int random1 = generateRandomNumber(0,1);
+            int random2 = generateRandomNumber(0,1);
+            partyPlayer1.add(createRandomCharacter(TypeOfCharacter.values()[random1], fc));
+            partyPlayer2.add(createRandomCharacter(TypeOfCharacter.values()[random2], fc));
+        }
+    }
 
     public String generateJson() {
         Gson gson = new Gson();
@@ -129,7 +142,7 @@ public class Game {
 
     private static int generateRandomNumber(int min, int max) {
         Random random = new Random();
-        return random.nextInt() * (max - min + 1);
+        return random.nextInt((max - min + 1) + min);
     }
 
     private static Character createRandomCharacter(TypeOfCharacter type, Faker faker) {
@@ -164,6 +177,7 @@ public class Game {
     }
 
     public void startGame() {
+        Graveyard graveyard = new Graveyard();
         System.out.println("The game has started!");
 
         while (getAliveCharacters(partyPlayer1).size() > 0 && getAliveCharacters(partyPlayer2).size() > 0) {
@@ -195,6 +209,16 @@ public class Game {
             System.out.println("player2 wins");
         } else {
             System.out.println("player1 wins");
+        }
+
+        sendDeathPlayersToTheGraveyard(partyPlayer1, graveyard, 1);
+        sendDeathPlayersToTheGraveyard(partyPlayer2, graveyard, 2);
+
+        graveyard.printGraveyard();
+    }
+    private void sendDeathPlayersToTheGraveyard(ArrayList<Character> partyPlayer, Graveyard graveyard, int party) {
+        for(Character player : partyPlayer) {
+            if (!player.isAlive) graveyard.sendCharacterToTheGraveyard(player, party);
         }
     }
 
