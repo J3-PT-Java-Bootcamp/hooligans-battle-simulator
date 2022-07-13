@@ -18,9 +18,13 @@ public class FileReadAndWrite {
 
     }
 
-    public static void writeFile(Game gameData) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new java.io.FileWriter(FILENAME));
-        writer.write(gameData.generateJson());
-        writer.close();
+    public static void writeFile(Game gameData)  {
+        try {
+            BufferedWriter writer = new BufferedWriter(new java.io.FileWriter(FILENAME));
+            writer.write(gameData.generateJson());
+            writer.close();
+        }catch (IOException e){
+            System.out.println("File not found.");
+        }
     }
 }

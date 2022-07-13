@@ -1,6 +1,7 @@
 package com.hooligansofjava;
 
 import com.google.gson.Gson;
+import jdk.swing.interop.SwingInterOpUtils;
 import net.datafaker.Faker;
 
 import java.io.IOException;
@@ -20,19 +21,18 @@ public class Game {
 
     //generar 2 arrays (player 1 y player 2) con size n
     //llenar esos arrays de random characters
-    public void randomParty(){
+    public void randomParty() {
         Faker fc = new Faker();
 
-        int index = generateRandomNumber(1,100);
+        int index = generateRandomNumber(1, 100);
         for (int i = 0; i < index; i++) {
-            int random1 = generateRandomNumber(0,1);
-            int random2 = generateRandomNumber(0,1);
+            int random1 = generateRandomNumber(0, 1);
+            int random2 = generateRandomNumber(0, 1);
             partyPlayer1.add(createRandomCharacter(TypeOfCharacter.values()[random1], fc));
             partyPlayer2.add(createRandomCharacter(TypeOfCharacter.values()[random2], fc));
         }
 
     }
-
 
     public String generateJson() {
         Gson gson = new Gson();
@@ -111,6 +111,41 @@ public class Game {
         return null;
     }
 
+    public void startCustomParty() {
+        Faker faker = new Faker();
+        Scanner sc = new Scanner(System.in);
+        int playerId = 0;
+        int players = 0;
+        while (players != 2) {
+            int player = 0;
+            if (playerId == 0) {
+                player = ConsoleQuery.queryToConsole(sc, "Select a player to start the set up:", new String[]{"Player 1", "Player 2"}, 1, 2);
+            } else if (playerId == 1) {
+                player = 2;
+            } else if (playerId == 2) {
+                player = 1;
+            }
+            players++;
+            playerId = player;
+            System.out.println("Hello Player " + player);
+            System.out.println("Now, you have to select the number of warriors and wizards.");
+            int warriorCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of warriors.", 1, 10);
+            generateCharacterLoop(faker, sc, TypeOfCharacter.WARRIOR, player, warriorCount);
+            int wizardCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of wizards.", 1, 10);
+            generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount);
+        }
+    }
+
+    public void playLastParty() {
+        try {
+            System.out.println("reading file");
+            parseJson(FileReadAndWrite.readFile());
+        } catch (IOException e) {
+            System.out.println("Error reading file.");
+        }
+    }
+
+
     private void generateCharacterLoop(Faker faker, Scanner sc, TypeOfCharacter type, int player, int count) {
         for (int i = 0; i < count; i++) {
             Character newCharacter;
@@ -145,7 +180,7 @@ public class Game {
 
     private static int generateRandomNumber(int min, int max) {
         Random random = new Random();
-        return random.nextInt( (max - min + 1)+min);
+        return random.nextInt((max - min + 1) + min);
     }
 
     private static Character createRandomCharacter(TypeOfCharacter type, Faker faker) {
@@ -178,6 +213,7 @@ public class Game {
         System.out.println("Finally, set a funny name for you Hero!");
         return createCharacter(type, name, health, firstAttribute, secondAttribute);
     }
+
     public void startGame() {
         System.out.println("The game has started!");
 
@@ -222,8 +258,6 @@ public class Game {
         }
         return aliveCharacters;
     }
-
-
 
 
 }
