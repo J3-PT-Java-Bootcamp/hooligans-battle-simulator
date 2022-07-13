@@ -13,20 +13,24 @@ public class Game {
     final ArrayList<Character> partyPlayer1 = new ArrayList<>();
     final ArrayList<Character> partyPlayer2 = new ArrayList<>();
 
+
     public Game() {
 
     }
+
     //generar 2 arrays (player 1 y player 2) con size n
     //llenar esos arrays de random characters
-    public void randomParty() {
+    public void randomParty(){
         Faker fc = new Faker();
-        final CharacterFactory characterFactory = new CharacterFactory(fc);
-        int index = generateRandomNumber(1, 100);
+        CharacterFactory factory = new CharacterFactory(fc);
+        int index = generateRandomNumber(1,100);
         for (int i = 0; i < index; i++) {
-            partyPlayer1.add(characterFactory.createRandomCharacter());
-            partyPlayer2.add(characterFactory.createRandomCharacter());
+            partyPlayer1.add(factory.createRandomCharacter());
+            partyPlayer2.add(factory.createRandomCharacter());
         }
+
     }
+
 
     public String generateJson() {
         Gson gson = new Gson();
@@ -68,6 +72,7 @@ public class Game {
 
     public Game startConsole() {
         System.out.println("Welcome to the game of Hooligans of JAVA: ");
+        Faker faker = new Faker();
         Scanner sc = new Scanner(System.in);
         int playerId = 0;
         int players = 0;
@@ -95,18 +100,53 @@ public class Game {
             System.out.println("Hello Player " + player);
             System.out.println("Now, you have to select the number of warriors and wizards.");
             int warriorCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of warriors.", 1, 10);
-            generateCharacterLoop(sc, TypeOfCharacter.WARRIOR, player, warriorCount);
+            generateCharacterLoop(faker, sc, TypeOfCharacter.WARRIOR, player, warriorCount);
             int wizardCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of wizards.", 1, 10);
-            generateCharacterLoop(sc, TypeOfCharacter.WIZARD, player, wizardCount);
+            generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount);
         }
         System.out.println("end reading data from terminal");
 
         return null;
     }
 
-    private void generateCharacterLoop(Scanner sc, TypeOfCharacter type, int player, int count) {
+    public void startCustomParty() {
+        Faker faker = new Faker();
+        Scanner sc = new Scanner(System.in);
+        int playerId = 0;
+        int players = 0;
+        while (players != 2) {
+            int player = 0;
+            if (playerId == 0) {
+                player = ConsoleQuery.queryToConsole(sc, "Select a player to start the set up:", new String[]{"Player 1", "Player 2"}, 1, 2);
+            } else if (playerId == 1) {
+                player = 2;
+            } else if (playerId == 2) {
+                player = 1;
+            }
+            players++;
+            playerId = player;
+            System.out.println("Hello Player " + player);
+            System.out.println("Now, you have to select the number of warriors and wizards.");
+            int warriorCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of warriors.", 1, 10);
+            generateCharacterLoop(faker, sc, TypeOfCharacter.WARRIOR, player, warriorCount);
+            int wizardCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of wizards.", 1, 10);
+            generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount);
+        }
+    }
+
+    public void playLastParty() {
+        try {
+            System.out.println("reading file");
+            parseJson(FileReadAndWrite.readFile());
+        } catch (IOException e) {
+            System.out.println("Error reading file.");
+        }
+    }
+
+
+    private void generateCharacterLoop(Faker faker, Scanner sc, TypeOfCharacter type, int player, int count) {
         Faker fc = new Faker();
-        final CharacterFactory characterFactory = new CharacterFactory(fc);
+        CharacterFactory factory = new CharacterFactory(fc);
         for (int i = 0; i < count; i++) {
             Character newCharacter;
             boolean customCharacter = ConsoleQuery.queryToConsole(sc, "Do you want to create a customized character? (Y/N)");
@@ -114,11 +154,12 @@ public class Game {
                 newCharacter = createCustomizedCharacter(sc, type);
             } else {
                 if (type == TypeOfCharacter.WARRIOR) {
-                    newCharacter = characterFactory.createRandomWarrior();
+                    newCharacter = factory.createRandomWarrior();
                 } else {
-                    newCharacter = characterFactory.createRandomWizard();
+                    newCharacter = factory.createRandomWizard();
                 }
             }
+            System.out.println(newCharacter);
             if (player == 1) {
                 this.partyPlayer1.add(newCharacter);
             } else {
@@ -173,9 +214,7 @@ public class Game {
         }
         return null;
     }
-
-    public void startGame() {
-        Graveyard graveyard = new Graveyard();
+    public void startGame(Graveyard graveyard) {
         System.out.println("The game has started!");
 
         while (getAliveCharacters(partyPlayer1).size() > 0 && getAliveCharacters(partyPlayer2).size() > 0) {
