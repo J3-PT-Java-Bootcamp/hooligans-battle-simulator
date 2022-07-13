@@ -22,13 +22,11 @@ public class Game {
     //llenar esos arrays de random characters
     public void randomParty(){
         Faker fc = new Faker();
-
+        CharacterFactory factory = new CharacterFactory(fc);
         int index = generateRandomNumber(1,100);
         for (int i = 0; i < index; i++) {
-            int random1 = generateRandomNumber(0,1);
-            int random2 = generateRandomNumber(0,1);
-            partyPlayer1.add(createRandomCharacter(TypeOfCharacter.values()[random1], fc));
-            partyPlayer2.add(createRandomCharacter(TypeOfCharacter.values()[random2], fc));
+            partyPlayer1.add(factory.createRandomCharacter());
+            partyPlayer2.add(factory.createRandomCharacter());
         }
 
     }
@@ -147,6 +145,8 @@ public class Game {
 
 
     private void generateCharacterLoop(Faker faker, Scanner sc, TypeOfCharacter type, int player, int count) {
+        Faker fc = new Faker();
+        CharacterFactory factory = new CharacterFactory(fc);
         for (int i = 0; i < count; i++) {
             Character newCharacter;
             boolean customCharacter = ConsoleQuery.queryToConsole(sc, "Do you want to create a customized character? (Y/N)");
@@ -154,9 +154,9 @@ public class Game {
                 newCharacter = createCustomizedCharacter(sc, type);
             } else {
                 if (type == TypeOfCharacter.WARRIOR) {
-                    newCharacter = characterFactory.createRandomWarrior();
+                    newCharacter = factory.createRandomWarrior();
                 } else {
-                    newCharacter = characterFactory.createRandomWizard();
+                    newCharacter = factory.createRandomWizard();
                 }
             }
             System.out.println(newCharacter);
@@ -214,8 +214,7 @@ public class Game {
         }
         return null;
     }
-    public void startGame() {
-        Graveyard graveyard = new Graveyard();
+    public void startGame(Graveyard graveyard) {
         System.out.println("The game has started!");
 
         while (getAliveCharacters(partyPlayer1).size() > 0 && getAliveCharacters(partyPlayer2).size() > 0) {
