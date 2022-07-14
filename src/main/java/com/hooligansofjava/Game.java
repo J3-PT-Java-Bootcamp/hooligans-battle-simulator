@@ -5,7 +5,6 @@ import net.datafaker.Faker;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -18,74 +17,23 @@ public class Game {
 
     }
 
-    //generar 2 arrays (player 1 y player 2) con size n
-    //llenar esos arrays de random characters
-    public void randomParty(){
+
+    public void randomParty(GameData gameData) {
         Faker fc = new Faker();
         CharacterFactory factory = new CharacterFactory(fc);
-        int index = generateRandomNumber(1,100);
+        int index = generateRandomNumber(1, 100);
         for (int i = 0; i < index; i++) {
-            partyPlayer1.add(factory.createRandomCharacter());
-            partyPlayer2.add(factory.createRandomCharacter());
+            gameData.partyPlayer1.add(factory.createRandomCharacter());
+            gameData.partyPlayer2.add(factory.createRandomCharacter());
         }
 
     }
 
-
-    public String generateJson() {
-        Gson gson = new Gson();
-        ArrayList<Wizard> player1Wizards;
-        player1Wizards = partyPlayer1.stream().filter(x -> x instanceof Wizard).map(x -> (Wizard) x).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-        ArrayList<Warrior> player1Warriors;
-        player1Warriors = partyPlayer1.stream().filter(x -> x instanceof Warrior).map(x -> (Warrior) x).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-        ArrayList<Wizard> player2Wizards;
-        player2Wizards = partyPlayer2.stream().filter(x -> x instanceof Wizard).map(x -> (Wizard) x).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-        ArrayList<Warrior> player2Warriors;
-        player2Warriors = partyPlayer2.stream().filter(x -> x instanceof Warrior).map(x -> (Warrior) x).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-        return "%s Warriors::%s player2::%sWarriors::%s".formatted(gson.toJson(player1Wizards), gson.toJson(player1Warriors), gson.toJson(player2Wizards), gson.toJson(player2Warriors));
-
-    }
-
-    public void parseJson(String JSONText) {
-        Gson gson = new Gson();
-        String[] player = JSONText.split("player2::");
-        String[] player1 = player[0].split("Warriors::");
-        String[] player2 = player[1].split("Warriors::");
-
-        String player1Wizards = player1[0];
-        String player1Warriors = player1[1];
-        String player2Wizards = player2[0];
-        String player2Warriors = player2[1];
-
-        Warrior[] loadedWarriors = gson.fromJson(player1Warriors, Warrior[].class);
-        Wizard[] loadedWizards = gson.fromJson(player1Wizards, Wizard[].class);
-        Warrior[] loadedWarriors2 = gson.fromJson(player2Warriors, Warrior[].class);
-        Wizard[] loadedWizards2 = gson.fromJson(player2Wizards, Wizard[].class);
-
-        partyPlayer1.addAll(Arrays.asList(loadedWarriors));
-        partyPlayer1.addAll(Arrays.asList(loadedWizards));
-        partyPlayer2.addAll(Arrays.asList(loadedWarriors2));
-        partyPlayer2.addAll(Arrays.asList(loadedWizards2));
-
-
-    }
-
-    public Game startConsole() {
-        Logger.colourLine("Welcome to the game of Hooligans of JAVA: ");
+    public void startCustomParty(GameData gameData) {
         Faker faker = new Faker();
         Scanner sc = new Scanner(System.in);
         int playerId = 0;
         int players = 0;
-        boolean readPreviousParty = ConsoleQuery.queryToConsole(sc, "Read previous party?");
-        if (readPreviousParty) {
-            try {
-                Logger.colourLine("reading file");
-                parseJson(FileReadAndWrite.readFile());
-                players = 2;
-            } catch (IOException e) {
-                Logger.colourLine("error reading file, Initiating normal game...");
-            }
-        }
         while (players != 2) {
             int player = 0;
             if (playerId == 0) {
@@ -97,61 +45,35 @@ public class Game {
             }
             players++;
             playerId = player;
-            Logger.colourLine("Hello Player " + player);
-            Logger.colourLine("Now, you have to select the number of warriors and wizards.");
+            System.out.println("Hello Player " + player);
+            System.out.println("Now, you have to select the number of warriors and wizards.");
             int warriorCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of warriors.", 1, 10);
-            generateCharacterLoop(faker, sc, TypeOfCharacter.WARRIOR, player, warriorCount);
+            generateCharacterLoop(faker, sc, TypeOfCharacter.WARRIOR, player, warriorCount, gameData);
             int wizardCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of wizards.", 1, 10);
-            generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount);
+            generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount, gameData);
         }
-        Logger.colourLine("end reading data from terminal");
+    }
 
+    public GameData playLastParty() {
+
+        try {
+            System.out.println("reading file");
+            return FileReadAndWrite.readFile();
+
+        } catch (IOException e) {
+            System.out.println("Error reading file.");
+        }
         return null;
     }
 
-    public void startCustomParty() {
-        Faker faker = new Faker();
-        Scanner sc = new Scanner(System.in);
-        int playerId = 0;
-        int players = 0;
-        while (players != 2) {
-            int player = 0;
-            if (playerId == 0) {
-                player = ConsoleQuery.queryToConsole(sc, "Select a player to start the set up:", new String[]{"Player 1", "Player 2"}, 1, 2);
-            } else if (playerId == 1) {
-                player = 2;
-            } else if (playerId == 2) {
-                player = 1;
-            }
-            players++;
-            playerId = player;
-            Logger.colourLine("Hello Player " + player);
-            Logger.colourLine("Now, you have to select the number of warriors and wizards.");
-            int warriorCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of warriors.", 1, 10);
-            generateCharacterLoop(faker, sc, TypeOfCharacter.WARRIOR, player, warriorCount);
-            int wizardCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of wizards.", 1, 10);
-            generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount);
-        }
-    }
 
-    public void playLastParty() {
-        try {
-            Logger.colourLine("reading file");
-            parseJson(FileReadAndWrite.readFile());
-        } catch (IOException e) {
-            Logger.colourLine("Error reading file.");
-        }
-    }
-
-
-    private void generateCharacterLoop(Faker faker, Scanner sc, TypeOfCharacter type, int player, int count) {
-        Faker fc = new Faker();
+    private void generateCharacterLoop(Faker fc, Scanner sc, TypeOfCharacter type, int player, int count, GameData gameData) {
         CharacterFactory factory = new CharacterFactory(fc);
         for (int i = 0; i < count; i++) {
             Character newCharacter;
             boolean customCharacter = ConsoleQuery.queryToConsole(sc, "Do you want to create a customized character? (Y/N)");
             if (customCharacter) {
-                newCharacter = createCustomizedCharacter(sc, type);
+                newCharacter = createCustomizedCharacter(sc, type, fc);
             } else {
                 if (type == TypeOfCharacter.WARRIOR) {
                     newCharacter = factory.createRandomWarrior();
@@ -159,11 +81,11 @@ public class Game {
                     newCharacter = factory.createRandomWizard();
                 }
             }
-            Logger.colourLine(String.valueOf(newCharacter));
+            System.out.println(newCharacter);
             if (player == 1) {
-                this.partyPlayer1.add(newCharacter);
+                gameData.partyPlayer1.add(newCharacter);
             } else {
-                this.partyPlayer2.add(newCharacter);
+                gameData.partyPlayer2.add(newCharacter);
             }
         }
     }
@@ -188,15 +110,14 @@ public class Game {
     }
 
 
-      private static Character createCustomizedCharacter(Scanner sc, TypeOfCharacter type) {
-        Faker fc = new Faker();
+    private static Character createCustomizedCharacter(Scanner sc, TypeOfCharacter type, Faker fc) {
         final CharacterFactory characterFactory = new CharacterFactory(fc);
         String name;
-        int health ;
-        int firstAttribute ;
-        int secondAttribute ;
+        int health;
+        int firstAttribute;
+        int secondAttribute;
 
-        Logger.colourLine("First, set a funny name for you Hero!");
+        System.out.println("First, set a funny name for you Hero!");
         name = ConsoleQuery.queryToConsoleText(sc, "First, set a funny name for you Hero!");
         switch (type) {
             case WARRIOR -> {
@@ -214,38 +135,40 @@ public class Game {
         }
         return null;
     }
-    public void startGame(Graveyard graveyard) {
-        Logger.colourLine("The game has started!");
 
-        while (getAliveCharacters(partyPlayer1).size() > 0 && getAliveCharacters(partyPlayer2).size() > 0) {
-            Character player1 = getAliveCharacters(partyPlayer1).get(0);
-            Character player2 = getAliveCharacters(partyPlayer2).get(0);
-            Logger.colourLine(ConsoleColors.BLUE_BOLD_BRIGHT+ "Player 1:  " + player1.name + " (" + player1.getHp() + ") Attacks " + ConsoleColors.YELLOW_BOLD_BRIGHT +" -->"+ConsoleColors.CYAN_BOLD_BRIGHT + " Player 2: " + player2.name + " (" + player2.getHp() + ")" );
-            Logger.colourLine(ConsoleColors.CYAN_BOLD_BRIGHT +"Player 2:  " + player2.name + "Attacks"+ConsoleColors.YELLOW_BOLD_BRIGHT +  " --> "+ConsoleColors.BLUE_BOLD_BRIGHT+" Player 1 " + player1.name);
+    public void startGame(Graveyard graveyard, GameData gameData) {
+        System.out.println("The game has started!");
+
+        while (getAliveCharacters(gameData.partyPlayer1).size() > 0 && getAliveCharacters(gameData.partyPlayer2).size() > 0) {
+            Character player1 = getAliveCharacters(gameData.partyPlayer1).get(0);
+            Character player2 = getAliveCharacters(gameData.partyPlayer2).get(0);
+            System.out.println("player1 " + player1.name + " (" + player1.getHp() + " ) Attacks " + "--> player2 " + player2.name + " (" + player2.getHp() + ")");
+            System.out.println("player2 " + player2.name + " Attacks --> player1 " + player1.name);
 
             player2.receiveAttack(player1.attack());
             player1.receiveAttack(player2.attack());
 
             if (!player1.isAlive) {
-                Logger.colourLine(ConsoleColors.RED_BOLD_BRIGHT +"Player 1 " + player1.name + " is dead");
+                System.out.println("player1 " + player1.name + " is dead");
             }
             if (!player2.isAlive) {
-                Logger.colourLine(ConsoleColors.RED_BOLD_BRIGHT +"Player 2 " + player2.name + " is dead");
+                System.out.println("player2 " + player2.name + " is dead");
             }
         }
-        if (getAliveCharacters(partyPlayer1).size() == 0) {
-            Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT +"Player 2 WINS!!!!");
+        if (getAliveCharacters(gameData.partyPlayer1).size() == 0) {
+            System.out.println("player2 wins");
         } else {
-            Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT +"Player 1 WINS!!!!");
+            System.out.println("player1 wins");
         }
 
-        sendDeathPlayersToTheGraveyard(partyPlayer1, graveyard, 1);
-        sendDeathPlayersToTheGraveyard(partyPlayer2, graveyard, 2);
+        sendDeathPlayersToTheGraveyard(gameData.partyPlayer1, graveyard, 1);
+        sendDeathPlayersToTheGraveyard(gameData.partyPlayer2, graveyard, 2);
 
         graveyard.printGraveyard();
     }
+
     private void sendDeathPlayersToTheGraveyard(ArrayList<Character> partyPlayer, Graveyard graveyard, int party) {
-        for(Character player : partyPlayer) {
+        for (Character player : partyPlayer) {
             if (!player.isAlive) graveyard.sendCharacterToTheGraveyard(player, party);
         }
     }
@@ -259,8 +182,6 @@ public class Game {
         }
         return aliveCharacters;
     }
-
-
 
 
 }

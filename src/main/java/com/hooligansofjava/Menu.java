@@ -1,6 +1,5 @@
 package com.hooligansofjava;
 
-import java.awt.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
