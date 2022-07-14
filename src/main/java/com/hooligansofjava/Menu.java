@@ -1,5 +1,7 @@
 package com.hooligansofjava;
 
+import com.google.gson.Gson;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -15,27 +17,31 @@ public class Menu {
         int option;
         Scanner sc = new Scanner(System.in);
         Game game = new Game();
+        GameData gameData = new GameData();
         Graveyard gy = new Graveyard();
 
 
         while (true) {
-
+            // https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe
+            // https://stackoverflow.com/questions/16800896/java-unmarshilling-json-data-containg-abstract-type
+// https://stackoverflow.com/questions/19588020/gson-serialize-a-list-of-polymorphic-objects/19600090#19600090
+            //
         option = ConsoleQuery.queryToConsole(sc,  "WELLCOME TO THE GAME: HOLLIGANS OF JAVA: \n Choose your option: ", new String[]{"Play new custom party", "Play new random party", "Play last party", "Check the graveyard", "Read the readme file", "Exit"}, 1, 6);
 
             switch (option) {
                 case 1:
-                    game.startCustomParty();
-                    FileReadAndWrite.writeFile(game);
-                    game.startGame(gy);
+                    game.startCustomParty(gameData);
+                    FileReadAndWrite.writeFile(gameData);
+                    game.startGame(gy, gameData);
                     break;
                 case 2:
-                    game.randomParty();
-                    FileReadAndWrite.writeFile(game);
-                    game.startGame(gy);
+                    game.randomParty(gameData);
+                    FileReadAndWrite.writeFile(gameData);
+                    game.startGame(gy,gameData);
                     break;
                 case 3:
-                    game.playLastParty();
-                    game.startGame(gy);
+                    gameData=  game.playLastParty();
+                    game.startGame(gy,gameData);
                     break;
                 case 4:
                     gy.printGraveyard();

@@ -6,15 +6,19 @@ import java.util.Random;
 import java.util.UUID;
 
 public abstract class Character implements Attacker {
+    public String isA;
     protected String id;
     protected String name;
     protected boolean isAlive;
 
+    public Character(){
 
+    }
     public Character(String name) {
         setId();
         setName(name);
         setAlive(true);
+        isA = "Character";
     }
 
     public String getId() {

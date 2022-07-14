@@ -7,11 +7,14 @@ public class Wizard extends Character {
     private int intelligence;
 
 
+
+
     public Wizard(String name, int hp, int mana, int intelligence) {
         super(name);
         setMana(mana);
         setIntelligence(intelligence);
         setHp(hp);
+        isA = "Wizard";
     }
 
     public int getHp() {
