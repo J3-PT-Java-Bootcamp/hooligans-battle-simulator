@@ -71,7 +71,7 @@ public class Game {
     }
 
     public Game startConsole() {
-        System.out.println("Welcome to the game of Hooligans of JAVA: ");
+        Logger.colourLine("Welcome to the game of Hooligans of JAVA: ");
         Faker faker = new Faker();
         Scanner sc = new Scanner(System.in);
         int playerId = 0;
@@ -79,11 +79,11 @@ public class Game {
         boolean readPreviousParty = ConsoleQuery.queryToConsole(sc, "Read previous party?");
         if (readPreviousParty) {
             try {
-                System.out.println("reading file");
+                Logger.colourLine("reading file");
                 parseJson(FileReadAndWrite.readFile());
                 players = 2;
             } catch (IOException e) {
-                System.out.println("error reading file, Initiating normal game...");
+                Logger.colourLine("error reading file, Initiating normal game...");
             }
         }
         while (players != 2) {
@@ -97,14 +97,14 @@ public class Game {
             }
             players++;
             playerId = player;
-            System.out.println("Hello Player " + player);
-            System.out.println("Now, you have to select the number of warriors and wizards.");
+            Logger.colourLine("Hello Player " + player);
+            Logger.colourLine("Now, you have to select the number of warriors and wizards.");
             int warriorCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of warriors.", 1, 10);
             generateCharacterLoop(faker, sc, TypeOfCharacter.WARRIOR, player, warriorCount);
             int wizardCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of wizards.", 1, 10);
             generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount);
         }
-        System.out.println("end reading data from terminal");
+        Logger.colourLine("end reading data from terminal");
 
         return null;
     }
@@ -125,8 +125,8 @@ public class Game {
             }
             players++;
             playerId = player;
-            System.out.println("Hello Player " + player);
-            System.out.println("Now, you have to select the number of warriors and wizards.");
+            Logger.colourLine("Hello Player " + player);
+            Logger.colourLine("Now, you have to select the number of warriors and wizards.");
             int warriorCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of warriors.", 1, 10);
             generateCharacterLoop(faker, sc, TypeOfCharacter.WARRIOR, player, warriorCount);
             int wizardCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of wizards.", 1, 10);
@@ -136,10 +136,10 @@ public class Game {
 
     public void playLastParty() {
         try {
-            System.out.println("reading file");
+            Logger.colourLine("reading file");
             parseJson(FileReadAndWrite.readFile());
         } catch (IOException e) {
-            System.out.println("Error reading file.");
+            Logger.colourLine("Error reading file.");
         }
     }
 
@@ -159,7 +159,7 @@ public class Game {
                     newCharacter = factory.createRandomWizard();
                 }
             }
-            System.out.println(newCharacter);
+            Logger.colourLine(String.valueOf(newCharacter));
             if (player == 1) {
                 this.partyPlayer1.add(newCharacter);
             } else {
@@ -196,7 +196,7 @@ public class Game {
         int firstAttribute ;
         int secondAttribute ;
 
-        System.out.println("First, set a funny name for you Hero!");
+        Logger.colourLine("First, set a funny name for you Hero!");
         name = ConsoleQuery.queryToConsoleText(sc, "First, set a funny name for you Hero!");
         switch (type) {
             case WARRIOR -> {
@@ -215,28 +215,28 @@ public class Game {
         return null;
     }
     public void startGame(Graveyard graveyard) {
-        System.out.println("The game has started!");
+        Logger.colourLine("The game has started!");
 
         while (getAliveCharacters(partyPlayer1).size() > 0 && getAliveCharacters(partyPlayer2).size() > 0) {
             Character player1 = getAliveCharacters(partyPlayer1).get(0);
             Character player2 = getAliveCharacters(partyPlayer2).get(0);
-            System.out.println("player1 " + player1.name + " (" + player1.getHp() + " ) Attacks " + "--> player2 " + player2.name + " (" + player2.getHp() + ")");
-            System.out.println("player2 " + player2.name + " Attacks --> player1 " + player1.name);
+            Logger.colourLine(ConsoleColors.BLUE_BOLD_BRIGHT+ "Player 1:  " + player1.name + " (" + player1.getHp() + ") Attacks " + ConsoleColors.YELLOW_BOLD_BRIGHT +" -->"+ConsoleColors.CYAN_BOLD_BRIGHT + " Player 2: " + player2.name + " (" + player2.getHp() + ")" );
+            Logger.colourLine(ConsoleColors.CYAN_BOLD_BRIGHT +"Player 2:  " + player2.name + "Attacks"+ConsoleColors.YELLOW_BOLD_BRIGHT +  " --> "+ConsoleColors.BLUE_BOLD_BRIGHT+" Player 1 " + player1.name);
 
             player2.receiveAttack(player1.attack());
             player1.receiveAttack(player2.attack());
 
             if (!player1.isAlive) {
-                System.out.println("player1 " + player1.name + " is dead");
+                Logger.colourLine(ConsoleColors.RED_BOLD_BRIGHT +"Player 1 " + player1.name + " is dead");
             }
             if (!player2.isAlive) {
-                System.out.println("player2 " + player2.name + " is dead");
+                Logger.colourLine(ConsoleColors.RED_BOLD_BRIGHT +"Player 2 " + player2.name + " is dead");
             }
         }
         if (getAliveCharacters(partyPlayer1).size() == 0) {
-            System.out.println("player2 wins");
+            Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT +"Player 2 WINS!!!!");
         } else {
-            System.out.println("player1 wins");
+            Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT +"Player 1 WINS!!!!");
         }
 
         sendDeathPlayersToTheGraveyard(partyPlayer1, graveyard, 1);

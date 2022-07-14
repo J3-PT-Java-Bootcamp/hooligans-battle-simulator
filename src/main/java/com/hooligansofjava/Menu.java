@@ -1,5 +1,6 @@
 package com.hooligansofjava;
 
+import java.awt.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -20,7 +21,7 @@ public class Menu {
 
         while (true) {
 
-        option = ConsoleQuery.queryToConsole(sc,  "WELLCOME TO THE GAME: HOLLIGANS OF JAVA: \n Choose your option: ", new String[]{"Play new custom party", "Play new random party", "Play last party", "Check the graveyard", "Read the readme file", "Exit"}, 1, 6);
+        option = ConsoleQuery.queryToConsole(sc,  ConsoleColors.BLACK_BACKGROUND + ConsoleColors.YELLOW_BOLD_BRIGHT + "WELLCOME TO THE GAME: HOLLIGANS OF JAVA: ", new String[]{"Play new custom party", "Play new random party", "Play last party", "Check the graveyard", "Read the readme file", "Exit"}, 1, 6);
 
             switch (option) {
                 case 1:
