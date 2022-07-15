@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+import static com.hooligansofjava.Utils.getRandomNumber;
+
 public class Game {
 
 
@@ -19,7 +21,7 @@ public class Game {
     public void randomParty(GameData gameData) {
         Faker fc = new Faker();
         CharacterFactory factory = new CharacterFactory(fc);
-        int index = generateRandomNumber(1, 100);
+        int index = getRandomNumber(1, 100);
         for (int i = 0; i < index; i++) {
             gameData.partyPlayer1.add(factory.createRandomCharacter());
             gameData.partyPlayer2.add(factory.createRandomCharacter());
@@ -51,15 +53,12 @@ public class Game {
         }
         System.out.println("end reading data from terminal");
 
-        return null;
     }
 
     public GameData playLastParty() {
-
-    public void playLastParty() {
         try {
             System.out.println("reading file");
-            parseJson(FileReadAndWrite.readFile());
+            FileReadAndWrite.readFile();
         } catch (IOException e) {
             System.out.println("Error reading file.");
         }
@@ -135,14 +134,14 @@ public class Game {
         }
         return null;
     }
-    public void startGame(Graveyard graveyard) {
+    public void startGame(Graveyard graveyard, GameData gameData) {
         System.out.println("The game has started!");
 
-        while (getAliveCharacters(partyPlayer1).size() > 0 && getAliveCharacters(partyPlayer2).size() > 0) {
-            Character player1 = getAliveCharacters(partyPlayer1).get(0);
-            Character player2 = getAliveCharacters(partyPlayer2).get(0);
-            System.out.println("player1 " + player1.name + " (" + player1.getHp() + " ) Attacks " + "--> player2 " + player2.name + " (" + player2.getHp() + ")");
-            System.out.println("player2 " + player2.name + " Attacks --> player1 " + player1.name);
+        while (getAliveCharacters(gameData.partyPlayer1).size() > 0 && getAliveCharacters(gameData.partyPlayer2).size() > 0) {
+            Character player1 = getAliveCharacters(gameData.partyPlayer1).get(0);
+            Character player2 = getAliveCharacters(gameData.partyPlayer2).get(0);
+            Logger.colourLine(ConsoleColors.BLUE_BOLD_BRIGHT+ "Player 1:  " + player1.name + " (" + player1.getHp() + ") Attacks " + ConsoleColors.YELLOW_BOLD_BRIGHT +" -->"+ConsoleColors.CYAN_BOLD_BRIGHT + " Player 2: " + player2.name + " (" + player2.getHp() + ")" );
+            Logger.colourLine(ConsoleColors.CYAN_BOLD_BRIGHT +"Player 2:  " + player2.name + "Attacks"+ConsoleColors.YELLOW_BOLD_BRIGHT +  " --> "+ConsoleColors.BLUE_BOLD_BRIGHT+" Player 1 " + player1.name);
 
             player2.receiveAttack(player1.attack());
             player1.receiveAttack(player2.attack());
@@ -154,7 +153,7 @@ public class Game {
                 Logger.colourLine(ConsoleColors.RED_BOLD_BRIGHT +"Player 2 " + player2.name + " is dead");
             }
         }
-        if (getAliveCharacters(partyPlayer1).size() == 0) {
+        if (getAliveCharacters(gameData.partyPlayer1).size() == 0) {
             System.out.println("player2 wins");
         } else {
             Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT +"Player 1 WINS!!!!");
@@ -180,8 +179,6 @@ public class Game {
         }
         return aliveCharacters;
     }
-
-
 
 
 }
