@@ -21,7 +21,9 @@ public class Game {
     public void randomParty(GameData gameData) {
         Faker fc = new Faker();
         CharacterFactory factory = new CharacterFactory(fc);
+
         int index = getRandomNumber(1, 100);
+
         for (int i = 0; i < index; i++) {
             gameData.partyPlayer1.add(factory.createRandomCharacter());
             gameData.partyPlayer2.add(factory.createRandomCharacter());
@@ -51,14 +53,13 @@ public class Game {
             int wizardCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of wizards.", 1, 10);
             generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount, gameData);
         }
-        System.out.println("end reading data from terminal");
 
-    }
 
     public GameData playLastParty() {
         try {
             System.out.println("reading file");
             FileReadAndWrite.readFile();
+
         } catch (IOException e) {
             System.out.println("Error reading file.");
         }
@@ -134,6 +135,7 @@ public class Game {
         }
         return null;
     }
+
     public void startGame(Graveyard graveyard, GameData gameData) {
         System.out.println("The game has started!");
 
@@ -142,6 +144,7 @@ public class Game {
             Character player2 = getAliveCharacters(gameData.partyPlayer2).get(0);
             Logger.colourLine(ConsoleColors.BLUE_BOLD_BRIGHT+ "Player 1:  " + player1.name + " (" + player1.getHp() + ") Attacks " + ConsoleColors.YELLOW_BOLD_BRIGHT +" -->"+ConsoleColors.CYAN_BOLD_BRIGHT + " Player 2: " + player2.name + " (" + player2.getHp() + ")" );
             Logger.colourLine(ConsoleColors.CYAN_BOLD_BRIGHT +"Player 2:  " + player2.name + "Attacks"+ConsoleColors.YELLOW_BOLD_BRIGHT +  " --> "+ConsoleColors.BLUE_BOLD_BRIGHT+" Player 1 " + player1.name);
+
 
             player2.receiveAttack(player1.attack());
             player1.receiveAttack(player2.attack());
@@ -164,8 +167,9 @@ public class Game {
 
         graveyard.printGraveyard();
     }
+
     private void sendDeathPlayersToTheGraveyard(ArrayList<Character> partyPlayer, Graveyard graveyard, int party) {
-        for(Character player : partyPlayer) {
+        for (Character player : partyPlayer) {
             if (!player.isAlive) graveyard.sendCharacterToTheGraveyard(player, party);
         }
     }

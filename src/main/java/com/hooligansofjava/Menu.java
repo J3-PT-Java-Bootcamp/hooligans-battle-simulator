@@ -1,5 +1,7 @@
 package com.hooligansofjava;
 
+import com.google.gson.Gson;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -26,6 +28,7 @@ public class Menu {
             //
 
         option = ConsoleQuery.queryToConsole(sc,  ConsoleColors.BLACK_BACKGROUND + ConsoleColors.YELLOW_BOLD_BRIGHT + "WELLCOME TO THE GAME: HOLLIGANS OF JAVA: ", new String[]{"Play new custom party", "Play new random party", "Play last party", "Check the graveyard", "Read the readme file", "Exit"}, 1, 6);
+
 
             switch (option) {
                 case 1:
