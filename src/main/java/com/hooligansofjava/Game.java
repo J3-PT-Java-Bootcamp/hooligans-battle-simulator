@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+
 public class Game {
 
 
@@ -19,7 +20,7 @@ public class Game {
     public void randomParty(GameData gameData) {
         Faker fc = new Faker();
         CharacterFactory factory = new CharacterFactory(fc);
-        int index = generateRandomNumber(1, 100);
+        int index = Utils.getRandomNumber(1, 100);
         for (int i = 0; i < index; i++) {
             gameData.partyPlayer1.add(factory.createRandomCharacter());
             gameData.partyPlayer2.add(factory.createRandomCharacter());
@@ -98,13 +99,10 @@ public class Game {
         } catch (NumberFormatException e) {
             return false;
         }
-        return number >= 0 && number <= 50;
+        return true;
     }
 
-    private static int generateRandomNumber(int min, int max) {
-        Random random = new Random();
-        return random.nextInt((max - min + 1) + min);
-    }
+
 
 
     private static Character createCustomizedCharacter(Scanner sc, TypeOfCharacter type, Faker fc) {
@@ -141,17 +139,48 @@ public class Game {
             Character player2 = getAliveCharacters(gameData.partyPlayer2).get(0);
             Logger.colourLine(ConsoleColors.BLUE_BOLD_BRIGHT + "Player 1:  " + player1.name + " (" + player1.getHp() + ") Attacks " + ConsoleColors.YELLOW_BOLD_BRIGHT + " -->" + ConsoleColors.CYAN_BOLD_BRIGHT + " Player 2: " + player2.name + " (" + player2.getHp() + ")");
             Logger.colourLine(ConsoleColors.CYAN_BOLD_BRIGHT + "Player 2:  " + player2.name + "Attacks" + ConsoleColors.YELLOW_BOLD_BRIGHT + " --> " + ConsoleColors.BLUE_BOLD_BRIGHT + " Player 1 " + player1.name);
+            int player1Dice = Utils.getRandomNumber(1, 20);
+            int player2Dice = Utils.getRandomNumber(1, 20);
 
+            switch (player1Dice) {
+                case 1:
+                case 2:
+                    System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 1 has missed!");
+                    break;
+                case 20:
+                    System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 1 has critically hit!");
+                    player2.receiveAttack(player1.attack()*2);
 
-            player2.receiveAttack(player1.attack());
-            player1.receiveAttack(player2.attack());
+                    break;
+                default:
+                    player2.receiveAttack(player1.attack());
 
-            if (!player1.isAlive) {
-                Logger.colourLine(ConsoleColors.RED_BOLD_BRIGHT + "Player 1 " + player1.name + " is dead");
+                    break;
             }
-            if (!player2.isAlive) {
-                Logger.colourLine(ConsoleColors.RED_BOLD_BRIGHT + "Player 2 " + player2.name + " is dead");
+            switch (player2Dice) {
+                case 1:
+                case 2:
+                    System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 2 has missed!");
+                    break;
+                case 20:
+                    System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 2 has critically hit!");
+                    player1.receiveAttack(player2.attack()*2);
+
+                    break;
+                default:
+                    player1.receiveAttack(player2.attack());
+
+                    break;
             }
+
+            if(!player1.isAlive&& !player2.isAlive) {
+                System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Both players have died!");
+            } else if (!player1.isAlive) {
+                System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 1 has died!");
+            } else if (!player2.isAlive) {
+                System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 2 has died!");
+            }
+
         }
         if (getAliveCharacters(gameData.partyPlayer1).size() == 0) {
             Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT + "Player 2 WINS!!!!");
