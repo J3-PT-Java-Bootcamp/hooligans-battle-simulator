@@ -103,8 +103,6 @@ public class Game {
     }
 
 
-
-
     private static Character createCustomizedCharacter(Scanner sc, TypeOfCharacter type, Faker fc) {
         final CharacterFactory characterFactory = new CharacterFactory(fc);
         String name;
@@ -143,34 +141,20 @@ public class Game {
             int player2Dice = Utils.getRandomNumber(1, 20);
 
             switch (player1Dice) {
-                case 1:
-                case 2:
-                    System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 1 has missed!");
-                    break;
-                case 20:
+                case 1, 2 -> System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 1 has missed!");
+                case 20 -> {
                     System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 1 has critically hit!");
-                    player2.receiveAttack(player1.attack()*2);
-
-                    break;
-                default:
-                    player2.receiveAttack(player1.attack());
-
-                    break;
+                    player2.receiveAttack(player1.attack() * 2);
+                }
+                default -> player2.receiveAttack(player1.attack());
             }
             switch (player2Dice) {
-                case 1:
-                case 2:
-                    System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 2 has missed!");
-                    break;
-                case 20:
+                case 1, 2 -> System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 2 has missed!");
+                case 20 -> {
                     System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 2 has critically hit!");
-                    player1.receiveAttack(player2.attack()*2);
-
-                    break;
-                default:
-                    player1.receiveAttack(player2.attack());
-
-                    break;
+                    player1.receiveAttack(player2.attack() * 2);
+                }
+                default -> player1.receiveAttack(player2.attack());
             }
 
             if(!player1.isAlive&& !player2.isAlive) {
