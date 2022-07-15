@@ -139,23 +139,24 @@ public class Game {
         while (getAliveCharacters(gameData.partyPlayer1).size() > 0 && getAliveCharacters(gameData.partyPlayer2).size() > 0) {
             Character player1 = getAliveCharacters(gameData.partyPlayer1).get(0);
             Character player2 = getAliveCharacters(gameData.partyPlayer2).get(0);
-            System.out.println("player1 " + player1.name + " (" + player1.getHp() + " ) Attacks " + "--> player2 " + player2.name + " (" + player2.getHp() + ")");
-            System.out.println("player2 " + player2.name + " Attacks --> player1 " + player1.name);
+            Logger.colourLine(ConsoleColors.BLUE_BOLD_BRIGHT + "Player 1:  " + player1.name + " (" + player1.getHp() + ") Attacks " + ConsoleColors.YELLOW_BOLD_BRIGHT + " -->" + ConsoleColors.CYAN_BOLD_BRIGHT + " Player 2: " + player2.name + " (" + player2.getHp() + ")");
+            Logger.colourLine(ConsoleColors.CYAN_BOLD_BRIGHT + "Player 2:  " + player2.name + "Attacks" + ConsoleColors.YELLOW_BOLD_BRIGHT + " --> " + ConsoleColors.BLUE_BOLD_BRIGHT + " Player 1 " + player1.name);
+
 
             player2.receiveAttack(player1.attack());
             player1.receiveAttack(player2.attack());
 
             if (!player1.isAlive) {
-                System.out.println("player1 " + player1.name + " is dead");
+                Logger.colourLine(ConsoleColors.RED_BOLD_BRIGHT + "Player 1 " + player1.name + " is dead");
             }
             if (!player2.isAlive) {
-                System.out.println("player2 " + player2.name + " is dead");
+                Logger.colourLine(ConsoleColors.RED_BOLD_BRIGHT + "Player 2 " + player2.name + " is dead");
             }
         }
         if (getAliveCharacters(gameData.partyPlayer1).size() == 0) {
-            System.out.println("player2 wins");
+            Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT + "Player 2 WINS!!!!");
         } else {
-            System.out.println("player1 wins");
+            Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT + "Player 1 WINS!!!!");
         }
 
         sendDeathPlayersToTheGraveyard(gameData.partyPlayer1, graveyard, 1);
