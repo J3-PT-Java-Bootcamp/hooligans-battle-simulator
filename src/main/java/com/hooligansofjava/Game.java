@@ -9,8 +9,6 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
-    final ArrayList<Character> partyPlayer1 = new ArrayList<>();
-    final ArrayList<Character> partyPlayer2 = new ArrayList<>();
 
 
     public Game() {
@@ -26,7 +24,6 @@ public class Game {
             gameData.partyPlayer1.add(factory.createRandomCharacter());
             gameData.partyPlayer2.add(factory.createRandomCharacter());
         }
-
     }
 
     public void startCustomParty(GameData gameData) {
