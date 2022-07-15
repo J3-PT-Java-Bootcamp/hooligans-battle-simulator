@@ -1,5 +1,7 @@
 package com.hooligansofjava;
 
+import java.awt.*;
+
 public class ConsoleColors {
 
     // Reset
@@ -57,7 +59,8 @@ public class ConsoleColors {
 
     // Bold High Intensity
     public static final String BLACK_BOLD_BRIGHT = "\033[1;90m"; // BLACK
-    public static final String RED_BOLD_BRIGHT = "\033[1;91m";   // RED
+   // public static final String RED_BOLD_BRIGHT = "\033[1;91m";   // RED
+    public static final String RED_BOLD_BRIGHT =  "\033[1;91m";  // RED
     public static final String GREEN_BOLD_BRIGHT = "\033[1;92m"; // GREEN
     public static final String YELLOW_BOLD_BRIGHT = "\033[1;93m";// YELLOW
     public static final String BLUE_BOLD_BRIGHT = "\033[1;94m";  // BLUE

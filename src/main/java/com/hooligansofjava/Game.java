@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+import static com.hooligansofjava.Utils.getRandomNumber;
+
 public class Game {
 
 
@@ -19,7 +21,9 @@ public class Game {
     public void randomParty(GameData gameData) {
         Faker fc = new Faker();
         CharacterFactory factory = new CharacterFactory(fc);
-        int index = generateRandomNumber(1, 100);
+
+        int index = getRandomNumber(1, 100);
+
         for (int i = 0; i < index; i++) {
             gameData.partyPlayer1.add(factory.createRandomCharacter());
             gameData.partyPlayer2.add(factory.createRandomCharacter());
@@ -42,20 +46,19 @@ public class Game {
             }
             players++;
             playerId = player;
-            System.out.println("Hello Player " + player);
-            System.out.println("Now, you have to select the number of warriors and wizards.");
+            Logger.colourLine("Hello Player " + player);
+            Logger.colourLine("Now, you have to select the number of warriors and wizards.");
             int warriorCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of warriors.", 1, 10);
             generateCharacterLoop(faker, sc, TypeOfCharacter.WARRIOR, player, warriorCount, gameData);
             int wizardCount = ConsoleQuery.queryToConsole(sc, "Now, you have to select the number of wizards.", 1, 10);
             generateCharacterLoop(faker, sc, TypeOfCharacter.WIZARD, player, wizardCount, gameData);
         }
-    }
+
 
     public GameData playLastParty() {
-
         try {
             System.out.println("reading file");
-            return FileReadAndWrite.readFile();
+            FileReadAndWrite.readFile();
 
         } catch (IOException e) {
             System.out.println("Error reading file.");
@@ -78,7 +81,7 @@ public class Game {
                     newCharacter = factory.createRandomWizard();
                 }
             }
-            System.out.println(newCharacter);
+            Logger.colourLine(String.valueOf(newCharacter));
             if (player == 1) {
                 gameData.partyPlayer1.add(newCharacter);
             } else {
@@ -114,7 +117,7 @@ public class Game {
         int firstAttribute;
         int secondAttribute;
 
-        System.out.println("First, set a funny name for you Hero!");
+        Logger.colourLine("First, set a funny name for you Hero!");
         name = ConsoleQuery.queryToConsoleText(sc, "First, set a funny name for you Hero!");
         switch (type) {
             case WARRIOR -> {
@@ -139,23 +142,24 @@ public class Game {
         while (getAliveCharacters(gameData.partyPlayer1).size() > 0 && getAliveCharacters(gameData.partyPlayer2).size() > 0) {
             Character player1 = getAliveCharacters(gameData.partyPlayer1).get(0);
             Character player2 = getAliveCharacters(gameData.partyPlayer2).get(0);
-            System.out.println("player1 " + player1.name + " (" + player1.getHp() + " ) Attacks " + "--> player2 " + player2.name + " (" + player2.getHp() + ")");
-            System.out.println("player2 " + player2.name + " Attacks --> player1 " + player1.name);
+            Logger.colourLine(ConsoleColors.BLUE_BOLD_BRIGHT+ "Player 1:  " + player1.name + " (" + player1.getHp() + ") Attacks " + ConsoleColors.YELLOW_BOLD_BRIGHT +" -->"+ConsoleColors.CYAN_BOLD_BRIGHT + " Player 2: " + player2.name + " (" + player2.getHp() + ")" );
+            Logger.colourLine(ConsoleColors.CYAN_BOLD_BRIGHT +"Player 2:  " + player2.name + "Attacks"+ConsoleColors.YELLOW_BOLD_BRIGHT +  " --> "+ConsoleColors.BLUE_BOLD_BRIGHT+" Player 1 " + player1.name);
+
 
             player2.receiveAttack(player1.attack());
             player1.receiveAttack(player2.attack());
 
             if (!player1.isAlive) {
-                System.out.println("player1 " + player1.name + " is dead");
+                Logger.colourLine(ConsoleColors.RED_BOLD_BRIGHT +"Player 1 " + player1.name + " is dead");
             }
             if (!player2.isAlive) {
-                System.out.println("player2 " + player2.name + " is dead");
+                Logger.colourLine(ConsoleColors.RED_BOLD_BRIGHT +"Player 2 " + player2.name + " is dead");
             }
         }
         if (getAliveCharacters(gameData.partyPlayer1).size() == 0) {
             System.out.println("player2 wins");
         } else {
-            System.out.println("player1 wins");
+            Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT +"Player 1 WINS!!!!");
         }
 
         sendDeathPlayersToTheGraveyard(gameData.partyPlayer1, graveyard, 1);
