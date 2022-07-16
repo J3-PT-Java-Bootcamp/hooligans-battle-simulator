@@ -79,7 +79,6 @@ public class Game {
                     newCharacter = factory.createRandomWizard();
                 }
             }
-            System.out.println(newCharacter);
             if (player == 1) {
                 gameData.partyPlayer1.add(newCharacter);
             } else {
