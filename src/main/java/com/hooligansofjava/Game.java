@@ -175,7 +175,10 @@ public class Game {
 
 
         }
-        if (getAliveCharacters(gameData.partyPlayer1).size() == 0) {
+        if(getAliveCharacters(gameData.partyPlayer1).size() == 0 && getAliveCharacters(gameData.partyPlayer2).size() == 0){
+            Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT + "Both players have died! Game Over!");
+
+        }else if (getAliveCharacters(gameData.partyPlayer1).size() == 0) {
             Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT + "Player 2 WINS!!!!");
         } else {
             Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT + "Player 1 WINS!!!!");
