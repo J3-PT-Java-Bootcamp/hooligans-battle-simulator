@@ -110,19 +110,18 @@ public class Game {
         int firstAttribute;
         int secondAttribute;
 
-        System.out.println("First, set a funny name for you Hero!");
         name = ConsoleQuery.queryToConsoleText(sc, "First, set a funny name for you Hero!");
         switch (type) {
             case WARRIOR -> {
-                health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between  %o - %o)".formatted(TypeOfCharacter.WARRIOR.HP_Min, TypeOfCharacter.WARRIOR.HP_Max), TypeOfCharacter.WARRIOR.HP_Min, TypeOfCharacter.WARRIOR.HP_Max);
-                firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much stamina do you want to set - (Choose a number between %o - %o)".formatted(TypeOfCharacter.WARRIOR.firstParamMin, TypeOfCharacter.WARRIOR.firstParamMax), TypeOfCharacter.WARRIOR.firstParamMin, TypeOfCharacter.WARRIOR.firstParamMax);
-                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much strength do you want to set - (Choose a number between  %o - %o)".formatted(TypeOfCharacter.WARRIOR.secondParamMin, TypeOfCharacter.WARRIOR.secondParamMax), TypeOfCharacter.WARRIOR.secondParamMin, TypeOfCharacter.WARRIOR.secondParamMax);
+                health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between  %s - %s)".formatted(TypeOfCharacter.WARRIOR.HP_Min, TypeOfCharacter.WARRIOR.HP_Max), TypeOfCharacter.WARRIOR.HP_Min, TypeOfCharacter.WARRIOR.HP_Max);
+                firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much stamina do you want to set - (Choose a number between %s - %s)".formatted(TypeOfCharacter.WARRIOR.firstParamMin, TypeOfCharacter.WARRIOR.firstParamMax), TypeOfCharacter.WARRIOR.firstParamMin, TypeOfCharacter.WARRIOR.firstParamMax);
+                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much strength do you want to set - (Choose a number between  %s - %s)".formatted(TypeOfCharacter.WARRIOR.secondParamMin, TypeOfCharacter.WARRIOR.secondParamMax), TypeOfCharacter.WARRIOR.secondParamMin, TypeOfCharacter.WARRIOR.secondParamMax);
                 return characterFactory.createWarrior(name, health, firstAttribute, secondAttribute);
             }
             case WIZARD -> {
-                health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between %o - %o)".formatted(TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax), TypeOfCharacter.WIZARD.HP_Min, TypeOfCharacter.WIZARD.HP_Max);
-                firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much mana do you want to set - (Choose a number between  %o - %o)".formatted(TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax), TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.secondParamMax);
-                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much intelligence do you want to set - (Choose a number between  %o - %o)".formatted(TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax), TypeOfCharacter.WIZARD.secondParamMin, TypeOfCharacter.WIZARD.secondParamMax);
+                health = ConsoleQuery.queryToConsole(sc, " define ho much health do you want to set - (Choose a number between %s - %s)".formatted(TypeOfCharacter.WIZARD.HP_Min, TypeOfCharacter.WIZARD.HP_Max), TypeOfCharacter.WIZARD.HP_Min, TypeOfCharacter.WIZARD.HP_Max);
+                firstAttribute = ConsoleQuery.queryToConsole(sc, "Define how much mana do you want to set - (Choose a number between  %s - %s)".formatted(TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax), TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax);
+                secondAttribute = ConsoleQuery.queryToConsole(sc, "Define how much intelligence do you want to set - (Choose a number between  %s - %s)".formatted(TypeOfCharacter.WIZARD.firstParamMin, TypeOfCharacter.WIZARD.firstParamMax), TypeOfCharacter.WIZARD.secondParamMin, TypeOfCharacter.WIZARD.secondParamMax);
                 return characterFactory.createWizard(name, health, firstAttribute, secondAttribute);
             }
         }
@@ -137,7 +136,7 @@ public class Game {
                 Character player2 = getAliveCharacters(gameData.partyPlayer2).get(0);
                 int player1Dice = Utils.getRandomNumber(1, 20);
                 int player2Dice = Utils.getRandomNumber(1, 20);
-                sleep(800L);
+                sleep(400L);
                 switch (player1Dice) {
                     case 1, 2 -> System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 1 has missed!");
                     case 20 -> {
@@ -145,7 +144,7 @@ public class Game {
                         player2.receiveAttack(player1.attack() * 2);
                     }
                     default -> {
-                        Logger.animatedLine(ConsoleColors.BLUE_BOLD_BRIGHT + "Player 1:  " + player1.name + " (" + player1.getHp() + ") Attacks " + ConsoleColors.YELLOW_BOLD_BRIGHT + " -->" + ConsoleColors.CYAN_BOLD_BRIGHT + " Player 2: " + player2.name + " (" + player2.getHp() + ")");
+                        Logger.colourLine(ConsoleColors.BLUE_BOLD_BRIGHT + "Player 1:  " + player1.name + " (" + player1.getHp() + ") Attacks " + ConsoleColors.YELLOW_BOLD_BRIGHT + " -->" + ConsoleColors.CYAN_BOLD_BRIGHT + " Player 2: " + player2.name + " (" + player2.getHp() + ")");
                         player2.receiveAttack(player1.attack());
                     }
                 }
@@ -156,7 +155,7 @@ public class Game {
                         player1.receiveAttack(player2.attack() * 2);
                     }
                     default -> {
-                        Logger.animatedLine(ConsoleColors.BLUE_BOLD_BRIGHT + "Player 2:  " + player2.name + " (" + player2.getHp() + ") Attacks " + ConsoleColors.YELLOW_BOLD_BRIGHT + " -->" + ConsoleColors.CYAN_BOLD_BRIGHT + " Player 1: " + player1.name + " (" + player1.getHp() + ")");
+                        Logger.colourLine(ConsoleColors.CYAN_BOLD_BRIGHT + "Player 2:  " + player2.name + " (" + player2.getHp() + ") Attacks " + ConsoleColors.YELLOW_BOLD_BRIGHT + " -->" + ConsoleColors.BLUE_BOLD_BRIGHT + " Player 1: " + player1.name + " (" + player1.getHp() + ")");
                         player1.receiveAttack(player2.attack());
 
                     }
@@ -174,11 +173,12 @@ public class Game {
 
         } catch (Exception e) {
 
+
         }
         if (getAliveCharacters(gameData.partyPlayer1).size() == 0) {
-            Logger.animatedLine(ConsoleColors.PURPLE_BOLD_BRIGHT + "Player 2 WINS!!!!");
+            Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT + "Player 2 WINS!!!!");
         } else {
-            Logger.animatedLine(ConsoleColors.PURPLE_BOLD_BRIGHT + "Player 1 WINS!!!!");
+            Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT + "Player 1 WINS!!!!");
         }
 
         sendDeathPlayersToTheGraveyard(gameData.partyPlayer1, graveyard, 1);
