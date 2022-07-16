@@ -25,7 +25,6 @@ public class CustomSerializer implements JsonSerializer<ArrayList<Character>> {
 
     @Override
     public JsonElement serialize(ArrayList<Character> src, Type typeOfSrc, JsonSerializationContext context) {
-        System.out.println("fjasdklfjasñdlkfjasdñlfkj");
         if (src == null)
             return null;
         else {

@@ -1,12 +1,12 @@
 package com.hooligansofjava;
 
-import com.google.gson.Gson;
 import net.datafaker.Faker;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
+
+import static java.lang.Thread.sleep;
 
 
 public class Game {
@@ -131,45 +131,54 @@ public class Game {
 
     public void startGame(Graveyard graveyard, GameData gameData) {
         System.out.println("The game has started!");
-
-        while (getAliveCharacters(gameData.partyPlayer1).size() > 0 && getAliveCharacters(gameData.partyPlayer2).size() > 0) {
-            Character player1 = getAliveCharacters(gameData.partyPlayer1).get(0);
-            Character player2 = getAliveCharacters(gameData.partyPlayer2).get(0);
-            Logger.colourLine(ConsoleColors.BLUE_BOLD_BRIGHT + "Player 1:  " + player1.name + " (" + player1.getHp() + ") Attacks " + ConsoleColors.YELLOW_BOLD_BRIGHT + " -->" + ConsoleColors.CYAN_BOLD_BRIGHT + " Player 2: " + player2.name + " (" + player2.getHp() + ")");
-            Logger.colourLine(ConsoleColors.CYAN_BOLD_BRIGHT + "Player 2:  " + player2.name + "Attacks" + ConsoleColors.YELLOW_BOLD_BRIGHT + " --> " + ConsoleColors.BLUE_BOLD_BRIGHT + " Player 1 " + player1.name);
-            int player1Dice = Utils.getRandomNumber(1, 20);
-            int player2Dice = Utils.getRandomNumber(1, 20);
-
-            switch (player1Dice) {
-                case 1, 2 -> System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 1 has missed!");
-                case 20 -> {
-                    System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 1 has critically hit!");
-                    player2.receiveAttack(player1.attack() * 2);
+        try {
+            while (getAliveCharacters(gameData.partyPlayer1).size() > 0 && getAliveCharacters(gameData.partyPlayer2).size() > 0) {
+                Character player1 = getAliveCharacters(gameData.partyPlayer1).get(0);
+                Character player2 = getAliveCharacters(gameData.partyPlayer2).get(0);
+                int player1Dice = Utils.getRandomNumber(1, 20);
+                int player2Dice = Utils.getRandomNumber(1, 20);
+                sleep(800L);
+                switch (player1Dice) {
+                    case 1, 2 -> System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 1 has missed!");
+                    case 20 -> {
+                        System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 1 has critically hit!");
+                        player2.receiveAttack(player1.attack() * 2);
+                    }
+                    default -> {
+                        Logger.animatedLine(ConsoleColors.BLUE_BOLD_BRIGHT + "Player 1:  " + player1.name + " (" + player1.getHp() + ") Attacks " + ConsoleColors.YELLOW_BOLD_BRIGHT + " -->" + ConsoleColors.CYAN_BOLD_BRIGHT + " Player 2: " + player2.name + " (" + player2.getHp() + ")");
+                        player2.receiveAttack(player1.attack());
+                    }
                 }
-                default -> player2.receiveAttack(player1.attack());
-            }
-            switch (player2Dice) {
-                case 1, 2 -> System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 2 has missed!");
-                case 20 -> {
-                    System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 2 has critically hit!");
-                    player1.receiveAttack(player2.attack() * 2);
+                switch (player2Dice) {
+                    case 1, 2 -> System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 2 has missed!");
+                    case 20 -> {
+                        System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 2 has critically hit!");
+                        player1.receiveAttack(player2.attack() * 2);
+                    }
+                    default -> {
+                        Logger.animatedLine(ConsoleColors.BLUE_BOLD_BRIGHT + "Player 2:  " + player2.name + " (" + player2.getHp() + ") Attacks " + ConsoleColors.YELLOW_BOLD_BRIGHT + " -->" + ConsoleColors.CYAN_BOLD_BRIGHT + " Player 1: " + player1.name + " (" + player1.getHp() + ")");
+                        player1.receiveAttack(player2.attack());
+
+                    }
                 }
-                default -> player1.receiveAttack(player2.attack());
+
+                if (!player1.isAlive && !player2.isAlive) {
+                    System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "⚰️⚰️⚰️⚰️Both players have died!⚰️⚰️⚰️⚰️");
+                } else if (!player1.isAlive) {
+                    System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "⚰️⚰️⚰️⚰️Player 1 has died!⚰️⚰️⚰️⚰️");
+                } else if (!player2.isAlive) {
+                    System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "⚰️⚰️⚰️⚰️Player 2 has died!⚰️⚰️⚰️⚰️");
+                }
+
             }
 
-            if(!player1.isAlive&& !player2.isAlive) {
-                System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Both players have died!");
-            } else if (!player1.isAlive) {
-                System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 1 has died!");
-            } else if (!player2.isAlive) {
-                System.out.println(ConsoleColors.RED_BOLD_BRIGHT + "Player 2 has died!");
-            }
+        } catch (Exception e) {
 
         }
         if (getAliveCharacters(gameData.partyPlayer1).size() == 0) {
-            Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT + "Player 2 WINS!!!!");
+            Logger.animatedLine(ConsoleColors.PURPLE_BOLD_BRIGHT + "Player 2 WINS!!!!");
         } else {
-            Logger.colourLine(ConsoleColors.PURPLE_BOLD_BRIGHT + "Player 1 WINS!!!!");
+            Logger.animatedLine(ConsoleColors.PURPLE_BOLD_BRIGHT + "Player 1 WINS!!!!");
         }
 
         sendDeathPlayersToTheGraveyard(gameData.partyPlayer1, graveyard, 1);

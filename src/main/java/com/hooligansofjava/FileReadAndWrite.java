@@ -31,9 +31,6 @@ public class FileReadAndWrite {
         String data = Files.readString(Path.of(FILENAME), StandardCharsets.UTF_8);
         String player1 = data.split("\n")[0];
         String player2 = data.split("\n")[1];
-/*
-        partyPlayer1= gson.fromJson(player1,partyPlayer1.class);
-*/
         partyPlayer1 = gson.fromJson(player1,partyPlayer1.getClass());
         partyPlayer2 = gson.fromJson(player2,partyPlayer2.getClass());
 
